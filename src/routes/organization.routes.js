@@ -63,7 +63,7 @@ const { validate, validateObjectId, organizationSchemas } = require('../middlewa
 
 /**
  * @swagger
- * /api/organizations:
+ * /organizations:
  *   post:
  *     summary: Create a new organization (superadmin only)
  *     tags: [Organizations]
@@ -115,7 +115,7 @@ router.post('/', authenticateJWT, requireAdmin, validate(organizationSchemas.cre
 
 /**
  * @swagger
- * /api/organizations:
+ * /organizations:
  *   get:
  *     summary: Get all organizations (superadmin only)
  *     tags: [Organizations]
@@ -144,7 +144,7 @@ router.get('/', authenticateJWT, requireAdmin, organizationController.getAllOrga
 
 /**
  * @swagger
- * /api/organizations/current:
+ * /organizations/current:
  *   get:
  *     summary: Get the current user's organization
  *     tags: [Organizations]
@@ -171,7 +171,7 @@ router.get('/current', authenticateJWT, addOrganizationToRequest, organizationCo
 
 /**
  * @swagger
- * /api/organizations/{id}:
+ * /organizations/{id}:
  *   get:
  *     summary: Get an organization by ID
  *     tags: [Organizations]
@@ -207,7 +207,7 @@ router.get('/:id', authenticateJWT, validateObjectId('id'), addOrganizationToReq
 
 /**
  * @swagger
- * /api/organizations/{id}:
+ * /organizations/{id}:
  *   put:
  *     summary: Update an organization
  *     tags: [Organizations]
@@ -260,7 +260,7 @@ router.put('/:id', authenticateJWT, validateObjectId('id'), addOrganizationToReq
 
 /**
  * @swagger
- * /api/organizations/{id}/regenerate-api-key:
+ * /organizations/{id}/regenerate-api-key:
  *   post:
  *     summary: Regenerate API key for an organization
  *     tags: [Organizations]

@@ -96,7 +96,7 @@ const auth = [
 
 /**
  * @swagger
- * /api/messages/{chatId}:
+ * /messages/{chatId}:
  *   post:
  *     summary: Create a new message in the chat
  *     tags: [Messages]
@@ -174,11 +174,11 @@ const auth = [
  *       500:
  *         description: Server error
  */
-router.post('/:chatId', auth, validateObjectId('chatId'), addOrganizationToRequest, validate(messageSchemas.create), messageController.createMessage);
+router.post('/:chatId', auth, validateObjectId('chatId'), addOrganizationToRequest, validate(messageSchemas.create), messageController.addMessage);
 
 /**
  * @swagger
- * /api/messages/batch/{chatId}:
+ * /messages/batch/{chatId}:
  *   post:
  *     summary: Create multiple messages in a chat
  *     tags: [Messages]
@@ -255,11 +255,11 @@ router.post('/:chatId', auth, validateObjectId('chatId'), addOrganizationToReque
  *       500:
  *         description: Server error
  */
-router.post('/batch/:chatId', auth, validateObjectId('chatId'), addOrganizationToRequest, validate(messageSchemas.batchCreate), messageController.createBatchMessages);
+router.post('/batch/:chatId', auth, validateObjectId('chatId'), addOrganizationToRequest, validate(messageSchemas.batchCreate), messageController.batchAddMessages);
 
 /**
  * @swagger
- * /api/messages/{chatId}:
+ * /messages/{chatId}:
  *   get:
  *     summary: Get all messages from a chat
  *     tags: [Messages]
@@ -328,7 +328,7 @@ router.get('/:chatId', auth, validateObjectId('chatId'), addOrganizationToReques
 
 /**
  * @swagger
- * /api/messages/{chatId}/{messageId}:
+ * /messages/{chatId}/{messageId}:
  *   get:
  *     summary: Get a specific message
  *     tags: [Messages]
@@ -369,7 +369,7 @@ router.get('/:chatId/:messageId', auth, validateObjectId('chatId'), validateObje
 
 /**
  * @swagger
- * /api/messages/{chatId}/{messageId}:
+ * /messages/{chatId}/{messageId}:
  *   put:
  *     summary: Update a message
  *     tags: [Messages]
@@ -424,7 +424,7 @@ router.put('/:chatId/:messageId', auth, validateObjectId('chatId'), validateObje
 
 /**
  * @swagger
- * /api/messages/{chatId}/{messageId}:
+ * /messages/{chatId}/{messageId}:
  *   delete:
  *     summary: Delete a message
  *     tags: [Messages]

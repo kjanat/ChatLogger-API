@@ -41,7 +41,7 @@ const swaggerOptions = {
         openapi: '3.0.0',
         info: {
             title: 'ChatLogger API',
-            version: '0.1.0',
+            version: '0.1.1',
             description: 'API for storing and retrieving chat interactions',
         },
         servers: [

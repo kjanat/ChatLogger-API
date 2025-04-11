@@ -1,6 +1,6 @@
 {
 	"name": "chatlogger",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "API for storing and retrieving chat interactions",
 	"main": "src/server.js",
 	"repository": "github:kjanat/ChatLogger.git",

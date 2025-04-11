@@ -8,7 +8,7 @@ const swaggerOptions = {
     openapi: '3.0.0',
     info: {
       title: 'Chat Logger API',
-      version: '0.1.0',
+      version: '0.1.1',
       description: 'API documentation for the Chat Logger application',
       license: {
         name: 'MIT',

@@ -84,7 +84,7 @@ const auth = [
 
 /**
  * @swagger
- * /api/chats:
+ * /chats:
  *   post:
  *     summary: Create a new chat session
  *     tags: [Chats]
@@ -139,7 +139,7 @@ router.post('/', auth, addOrganizationToRequest, validate(chatSchemas.create), c
 
 /**
  * @swagger
- * /api/chats:
+ * /chats:
  *   get:
  *     summary: Get all chats for current user
  *     tags: [Chats]
@@ -191,7 +191,7 @@ router.get('/', auth, addOrganizationToRequest, validateQuery(chatSchemas.pagina
 
 /**
  * @swagger
- * /api/chats/search:
+ * /chats/search:
  *   get:
  *     summary: Search chats by title or tags
  *     tags: [Chats]
@@ -244,7 +244,7 @@ router.get('/search', auth, addOrganizationToRequest, validateQuery(chatSchemas.
 
 /**
  * @swagger
- * /api/chats/{chatId}:
+ * /chats/{chatId}:
  *   get:
  *     summary: Get a specific chat by ID
  *     tags: [Chats]
@@ -279,7 +279,7 @@ router.get('/:chatId', auth, validateObjectId('chatId'), addOrganizationToReques
 
 /**
  * @swagger
- * /api/chats/{chatId}:
+ * /chats/{chatId}:
  *   put:
  *     summary: Update chat details
  *     tags: [Chats]
@@ -336,7 +336,7 @@ router.put('/:chatId', auth, validateObjectId('chatId'), addOrganizationToReques
 
 /**
  * @swagger
- * /api/chats/{chatId}:
+ * /chats/{chatId}:
  *   delete:
  *     summary: Delete a chat and its messages
  *     tags: [Chats]

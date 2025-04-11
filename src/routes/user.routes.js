@@ -14,7 +14,7 @@ const { validate, validateQuery, validateObjectId, userSchemas } = require('../m
 
 /**
  * @swagger
- * /api/users/register:
+ * /users/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Users]
@@ -59,7 +59,7 @@ router.post('/register', validate(userSchemas.register), userController.register
 
 /**
  * @swagger
- * /api/users/login:
+ * /users/login:
  *   post:
  *     summary: Login a user
  *     tags: [Users]
@@ -93,7 +93,7 @@ router.post('/login', validate(userSchemas.login), userController.login);
 
 /**
  * @swagger
- * /api/users/profile:
+ * /users/profile:
  *   get:
  *     summary: Get current user profile
  *     tags: [Users]
@@ -111,7 +111,7 @@ router.get('/profile', authenticateJWT, userController.getProfile);
 
 /**
  * @swagger
- * /api/users/generate-api-key:
+ * /users/generate-api-key:
  *   post:
  *     summary: Generate API key for current user
  *     tags: [Users]
@@ -129,7 +129,7 @@ router.post('/generate-api-key', authenticateJWT, userController.generateApiKey)
 
 /**
  * @swagger
- * /api/users/organization-users:
+ * /users/organization-users:
  *   get:
  *     summary: Get all users in the organization (admin only)
  *     tags: [Users]
@@ -167,7 +167,7 @@ router.get('/organization-users', authenticateJWT, requireAdmin, addOrganization
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   put:
  *     summary: Update a user
  *     tags: [Users]
