@@ -5,7 +5,7 @@
 const semver = require('semver');
 
 // Current version information
-const currentVersion = '0.1.1';
+const currentVersion = '0.2.0';
 
 module.exports = {
     // Current version without v prefix
