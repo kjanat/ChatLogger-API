@@ -84,9 +84,16 @@ const getOrganizationById = async (req, res) => {
     
     // Superadmins can view any organization
     // Regular users and admins can only view their own organization
-    const query = req.user.role === 'superadmin' ? 
-      { _id: id } : 
-      { _id: id, _id: req.user.organizationId };
+    let query;
+    if (req.user.role === 'superadmin') {
+      query = { _id: id };
+    } else {
+      // For regular admins, make sure it's both the requested ID AND their organization
+      if (id !== req.user.organizationId.toString()) {
+        return res.status(403).json({ message: 'Access denied: You can only view your own organization' });
+      }
+      query = { _id: id };
+    }
       
     const organization = await Organization.findOne(query);
     
@@ -109,9 +116,16 @@ const updateOrganization = async (req, res) => {
     
     // Superadmins can update any organization
     // Regular admins can only update their own organization
-    const query = req.user.role === 'superadmin' ? 
-      { _id: id } : 
-      { _id: id, _id: req.user.organizationId };
+    let query;
+    if (req.user.role === 'superadmin') {
+      query = { _id: id };
+    } else {
+      // For regular admins, make sure it's both the requested ID AND their organization
+      if (id !== req.user.organizationId.toString()) {
+        return res.status(403).json({ message: 'Access denied: You can only update your own organization' });
+      }
+      query = { _id: id };
+    }
       
     const organization = await Organization.findOne(query);
     
@@ -146,9 +160,16 @@ const regenerateApiKey = async (req, res) => {
     
     // Superadmins can regenerate API key for any organization
     // Regular admins can only regenerate API key for their own organization
-    const query = req.user.role === 'superadmin' ? 
-      { _id: id } : 
-      { _id: id, _id: req.user.organizationId };
+    let query;
+    if (req.user.role === 'superadmin') {
+      query = { _id: id };
+    } else {
+      // For regular admins, make sure it's both the requested ID AND their organization
+      if (id !== req.user.organizationId.toString()) {
+        return res.status(403).json({ message: 'Access denied: You can only regenerate API keys for your own organization' });
+      }
+      query = { _id: id };
+    }
       
     const organization = await Organization.findOne(query);
     

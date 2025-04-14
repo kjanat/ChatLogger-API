@@ -1,47 +1,83 @@
 {
-	"name": "chatlogger",
-	"version": "0.1.1",
-	"description": "API for storing and retrieving chat interactions",
-	"main": "src/server.js",
-	"repository": "github:kjanat/ChatLogger.git",
-	"homepage": "https://github.com/kjanat/ChatLogger#readme",
-	"bugs": {
-		"url": "https://github.com/kjanat/ChatLogger/issues",
-		"email": "dev+issues-chatlogger@kajkowalski.nl"
-	},
-	"scripts": {
-		"start": "node src/server.js",
-		"dev": "nodemon src/server.js",
-		"test": "jest"
-	},
-	"keywords": [
-		"chatbot",
-		"logger",
-		"api",
-		"mongodb",
-		"express",
-		"chatlogger"
-	],
-	"author": "Kaj Kowalski <dev@kajkowalski.nl> (https://github.com/kjanat)",
-	"license": "MIT",
-	"dependencies": {
-		"bcryptjs": "^3.0.2",
-		"cors": "^2.8.5",
-		"dotenv": "^16.4.7",
-		"express": "^5.1.0",
-		"express-rate-limit": "^7.5.0",
-		"helmet": "^8.1.0",
-		"joi": "^17.13.3",
-		"jsonwebtoken": "^9.0.2",
-		"mongoose": "^8.13.2",
-		"morgan": "^1.10.0",
-		"swagger-jsdoc": "^6.2.8",
-		"swagger-ui-express": "^5.0.1",
-		"winston": "^3.17.0"
-	},
-	"devDependencies": {
-		"nodemon": "^3.1.9",
-		"jest": "^29.7.0",
-		"supertest": "^7.1.0"
-	}
+    "name": "@kjanat/chatlogger",
+    "description": "API for storing and retrieving chat interactions",
+    "version": "0.1.1",
+    "author": "Kaj Kowalski <dev@kajkowalski.nl> (https://github.com/kjanat)",
+    "license": "MIT",
+    "main": "src/server.js",
+    "homepage": "https://github.com/kjanat/chatlogger#readme",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kjanat/chatlogger.git"
+    },
+    "bugs": {
+        "url": "https://github.com/kjanat/chatlogger/issues",
+        "email": "dev+issues-chatlogger@kjanat.com"
+    },
+    "scripts": {
+        "start": "node src/server.js",
+        "dev": "nodemon src/server.js",
+        "test:unit": "jest --config jest.unit.config.js",
+        "test:integration": "jest --config jest.integration.config.js",
+        "test": "npm run test:unit && npm run test:integration",
+        "test:coverage": "jest --coverage",
+        "version:patch": "node .scripts/version-bump.js patch",
+        "version:minor": "node .scripts/version-bump.js minor",
+        "version:major": "node .scripts/version-bump.js major",
+        "version:prepatch": "node .scripts/version-bump.js prepatch",
+        "version:preminor": "node .scripts/version-bump.js preminor",
+        "version:premajor": "node .scripts/version-bump.js premajor",
+        "version:prerelease": "node .scripts/version-bump.js prerelease",
+        "version:alpha": "node .scripts/version-bump.js prerelease --preid=alpha",
+        "version:beta": "node .scripts/version-bump.js prerelease --preid=beta",
+        "version:rc": "node .scripts/version-bump.js prerelease --preid=rc",
+        "docker:build": "node .scripts/docker-build.js",
+        "docker:compose": "VERSION=$(node -p \"require('./src/config/version.js').version\") docker-compose up -d",
+        "lint": "eslint .",
+        "serve": "serve -s build",
+        "build": "webpack --mode production",
+        "generate:secret": "node src/utils/generate-secret.js"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "*.*"
+        ],
+        "ext": "js,mjs,cjs,json,yaml,yml,ts",
+        "ignore": [
+            ".git",
+            "node_modules"
+        ]
+    },
+    "keywords": [
+        "chatbot",
+        "logger",
+        "api",
+        "mongodb",
+        "express",
+        "chatlogger"
+    ],
+    "dependencies": {
+        "bcryptjs": "^3.0.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^5.1.0",
+        "express-rate-limit": "^7.5.0",
+        "helmet": "^8.1.0",
+        "joi": "^17.13.3",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.13.2",
+        "morgan": "^1.10.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
+        "winston": "^3.17.0",
+        "yaml": "^2.7.1"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.26.9",
+        "jest": "^29.7.0",
+        "mongodb-memory-server": "^10.1.4",
+        "nodemon": "^3.1.9",
+        "semver": "^7.7.1",
+        "supertest": "^7.1.0"
+    }
 }

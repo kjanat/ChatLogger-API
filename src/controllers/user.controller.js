@@ -241,11 +241,196 @@ const updateUser = async (req, res) => {
     }
 };
 
+// Get user by ID
+const getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Regular users can only view themselves
+        // Admins can view any user in their organization
+        // Superadmins can view any user
+        let user;
+        
+        if (req.user.role === 'superadmin') {
+            user = await User.findById(id).select('-password');
+        } else if (req.user.role === 'admin') {
+            user = await User.findOne({ 
+                _id: id, 
+                organizationId: req.user.organizationId 
+            }).select('-password');
+        } else {
+            // Regular users can only view themselves
+            if (id !== req.user._id.toString()) {
+                return res.status(403).json({ 
+                    message: 'Access denied: You can only view your own profile' 
+                });
+            }
+            user = await User.findById(id).select('-password');
+        }
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        res.status(200).json({
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                organizationId: user.organizationId,
+                isActive: user.isActive,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            }
+        });
+    } catch (error) {
+        logger.error(`Get user by ID error: ${error.message}`);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Search for users with filtering options
+const searchUsers = async (req, res) => {
+    try {
+        // Only admins and superadmins can search users
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied: Admin privileges required'
+            });
+        }
+
+        const { 
+            username, 
+            email, 
+            role, 
+            isActive, 
+            page = 1, 
+            limit = 10,
+            sortBy = 'username',
+            sortOrder = 'asc'
+        } = req.query;
+        
+        // Build query
+        const query = {};
+        
+        // Organization filtering
+        if (req.user.role === 'admin') {
+            // Admins can only see users in their organization
+            query.organizationId = req.user.organizationId;
+        } else if (req.user.role === 'superadmin' && req.query.organizationId) {
+            // Superadmins can filter by organization
+            query.organizationId = req.query.organizationId;
+        }
+        
+        // Apply filters
+        if (username) {
+            query.username = { $regex: username, $options: 'i' };
+        }
+        
+        if (email) {
+            query.email = { $regex: email, $options: 'i' };
+        }
+        
+        if (role) {
+            query.role = role;
+        }
+        
+        if (isActive !== undefined) {
+            query.isActive = isActive === 'true';
+        }
+        
+        // Sorting
+        const sortOptions = {};
+        sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+        
+        // Pagination
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(limit, 10),
+        };
+        
+        // Execute query
+        const users = await User.find(query)
+            .sort(sortOptions)
+            .limit(options.limit)
+            .skip((options.page - 1) * options.limit)
+            .select('-password');
+        
+        const total = await User.countDocuments(query);
+        
+        res.status(200).json({
+            users,
+            totalPages: Math.ceil(total / options.limit),
+            currentPage: options.page,
+            totalUsers: total,
+        });
+    } catch (error) {
+        logger.error(`Search users error: ${error.message}`);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Create admin/superadmin user
+const createAdminUser = async (req, res) => {
+    try {
+        const { username, email, password, role, organizationId } = req.body;
+
+        // Only superadmins can create admins/superadmins directly
+        // Regular admins can update roles but not directly create admin users
+        if (req.user.role !== 'superadmin' && (role === 'admin' || role === 'superadmin')) {
+            return res.status(403).json({
+                message: 'Access denied: Superadmin privileges required to create admin users'
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }],
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                message: 'User with this email or username already exists',
+            });
+        }
+
+        // Create new user with specified role
+        const user = new User({
+            username,
+            email,
+            password,
+            role: role || 'user', // Default to 'user' if not specified
+            organizationId,
+        });
+
+        await user.save();
+        
+        res.status(201).json({
+            message: 'User created successfully',
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                organizationId: user.organizationId,
+                isActive: user.isActive
+            }
+        });
+    } catch (error) {
+        logger.error(`Create admin user error: ${error.message}`);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 module.exports = {
     register,
     login,
     getProfile,
     generateApiKey,
     getUsersInOrganization,
-    updateUser
+    updateUser,
+    getUserById,
+    searchUsers,
+    createAdminUser
 };

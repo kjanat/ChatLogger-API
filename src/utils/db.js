@@ -4,32 +4,29 @@ const logger = require('./logger');
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(config.mongodbUri, {
-            // MongoDB driver options
-        });
+        // logger.info(`Attempting to connect to MongoDB at URI: ${config.mongodbUri}`);
 
-        logger.info(`MongoDB Connected: ${conn.connection.host}`);
+        const conn = await mongoose.connect(config.mongodbUri);
 
-        // Log when connection is disconnected
-        mongoose.connection.on('disconnected', () => {
-            logger.warn('MongoDB connection disconnected');
-        });
-
-        // Log when connection is reconnected
-        mongoose.connection.on('reconnected', () => {
-            logger.info('MongoDB connection reestablished');
-        });
-
-        // Log when connection throws an error
-        mongoose.connection.on('error', (err) => {
-            logger.error(`MongoDB connection error: ${err.message}`);
-        });
-
+        logger.info(`MongoDB Connected: '${conn.connection.host}'`);
         return conn;
     } catch (error) {
-        logger.error(`Error connecting to MongoDB: ${error.message}`);
+        logger.error(`Error connecting to MongoDB at URI: '${config.mongodbUri}'`);
+        logger.error(`Connection error: ${error.message}`);
         process.exit(1);
     }
 };
+
+mongoose.connection.on('disconnected', () => {
+    logger.warn('MongoDB connection disconnected');
+});
+
+mongoose.connection.on('reconnected', () => {
+    logger.info('MongoDB connection reestablished');
+});
+
+mongoose.connection.on('error', (err) => {
+    logger.error(`MongoDB connection error: ${err.message}`);
+});
 
 module.exports = connectDB;

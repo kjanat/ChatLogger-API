@@ -59,32 +59,55 @@ const validateObjectId = (paramName) => (req, res, next) => {
 const paginationSchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).max(100).default(10),
-  sortBy: Joi.string().valid('createdAt', 'updatedAt', 'name', 'role').default('createdAt'),
+  sortBy: Joi.string().valid('createdAt', 'updatedAt', 'name', 'username', 'email', 'role').default('createdAt'),
   sortOrder: Joi.string().valid('asc', 'desc').default('desc')
 });
 
 // User schemas
 const userSchemas = {
   create: Joi.object({
-    name: Joi.string().min(2).max(50).required(),
+    name: Joi.string().min(2).max(50).optional(),
+    username: Joi.string().min(2).max(50).optional(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    role: Joi.string().valid('user', 'admin').default('user'),
+    role: Joi.string().valid('user', 'admin', 'superadmin').default('user'),
     organizationId: Joi.string().custom(objectIdValidator).optional(),
+    isActive: Joi.boolean().optional().default(true),
     metadata: Joi.object().optional()
   }),
   
   update: Joi.object({
     name: Joi.string().min(2).max(50).optional(),
+    username: Joi.string().min(2).max(50).optional(),
     email: Joi.string().email().optional(),
     password: Joi.string().min(6).optional(),
-    role: Joi.string().valid('user', 'admin').optional(),
+    role: Joi.string().valid('user', 'admin', 'superadmin').optional(),
+    isActive: Joi.boolean().optional(),
     metadata: Joi.object().optional()
+  }),
+  
+  register: Joi.object({
+    username: Joi.string().min(2).max(50).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    organizationId: Joi.string().custom(objectIdValidator).required()
   }),
   
   login: Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required()
+  }),
+
+  search: Joi.object({
+    username: Joi.string().optional(),
+    email: Joi.string().optional(),
+    role: Joi.string().valid('user', 'admin', 'superadmin').optional(),
+    isActive: Joi.string().valid('true', 'false').optional(),
+    organizationId: Joi.string().custom(objectIdValidator).optional(),
+    sortBy: Joi.string().valid('username', 'email', 'role', 'createdAt', 'updatedAt').default('username'),
+    sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(10)
   }),
 
   pagination: paginationSchema
@@ -94,6 +117,8 @@ const userSchemas = {
 const chatSchemas = {
   create: Joi.object({
     title: Joi.string().min(1).max(100).required(),
+    source: Joi.string().valid('web', 'mobile', 'api', 'widget').default('web'),
+    tags: Joi.array().items(Joi.string()).optional(),
     model: Joi.string().optional(),
     systemPrompt: Joi.string().optional(),
     metadata: Joi.object().optional()

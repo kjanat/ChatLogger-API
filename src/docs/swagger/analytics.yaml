@@ -1,0 +1,234 @@
+tags:
+  - name: Analytics
+    description: Data analytics for chat interactions
+
+paths:
+  /analytics/activity:
+    get:
+      summary: Get chat activity metrics by date
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for the metrics (YYYY-MM-DD). Defaults to 30 days ago if not provided.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for the metrics (YYYY-MM-DD). Defaults to today if not provided.
+      responses:
+        200:
+          description: Chat activity metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Chat activity retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                          example: 2025-04-01
+                        count:
+                          type: integer
+                          example: 15
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date
+                        example: 2025-03-14
+                      endDate:
+                        type: string
+                        format: date
+                        example: 2025-04-13
+                      totalDays:
+                        type: integer
+                        example: 30
+                      totalChats:
+                        type: integer
+                        example: 450
+        400:
+          description: Invalid date format
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden - Admin privileges required
+        500:
+          description: Server error
+
+  /analytics/messages/stats:
+    get:
+      summary: Get message statistics grouped by role
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for the stats (YYYY-MM-DD). Defaults to 30 days ago if not provided.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for the stats (YYYY-MM-DD). Defaults to today if not provided.
+      responses:
+        200:
+          description: Message statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message statistics retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          example: user
+                        count:
+                          type: integer
+                          example: 120
+                        avgTokens:
+                          type: number
+                          format: float
+                          example: 15.5
+                        totalTokens:
+                          type: integer
+                          example: 1860
+                        avgLatency:
+                          type: number
+                          format: float
+                          example: 200.5
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date
+                        example: 2025-03-14
+                      endDate:
+                        type: string
+                        format: date
+                        example: 2025-04-13
+                      totalChats:
+                        type: integer
+                        example: 45
+                      totalMessages:
+                        type: integer
+                        example: 1200
+                      totalTokens:
+                        type: integer
+                        example: 18600
+        400:
+          description: Invalid date format
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden - Admin privileges required
+        500:
+          description: Server error
+
+  /analytics/users/top:
+    get:
+      summary: Get top users by chat activity
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Limit the number of top users returned. Defaults to 10 if not provided.
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for the analysis (YYYY-MM-DD). Defaults to 30 days ago if not provided.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for the analysis (YYYY-MM-DD). Defaults to today if not provided.
+      responses:
+        200:
+          description: Top users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Top users retrieved successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userId:
+                          type: string
+                          example: 60d21b4667d0d8992e610c85
+                        username:
+                          type: string
+                          example: johndoe
+                        email:
+                          type: string
+                          format: email
+                          example: johndoe@example.com
+                        chatCount:
+                          type: integer
+                          example: 25
+                        lastActivity:
+                          type: string
+                          format: date-time
+                          example: 2025-04-12T15:30:00Z
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date
+                        example: 2025-03-14
+                      endDate:
+                        type: string
+                        format: date
+                        example: 2025-04-13
+                      limit:
+                        type: integer
+                        example: 10
+        400:
+          description: Invalid parameters
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden - Admin privileges required
+        500:
+          description: Server error

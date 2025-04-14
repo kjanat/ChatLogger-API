@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: ChatLogger API
+  summary: API for storing and retrieving chat interactions
+  description: >
+    This API allows you to store and retrieve chat interactions. See our [GitHub](https://github.com/kjanat/chatlogger "GitHub: kjanat/ChatLogger") repo.
+
+  contact:
+    name: '@kjanat'
+    url: https://github.com/kjanat/chatlogger/issues
+    email: dev+api-chatlogger@kjanat.com
+  license:
+    name: MIT License
+    url: https://github.com/kjanat/ChatLogger/blob/master/LICENSE
+  # version is dynamically added by the JS code
+
+# Servers are dynamically added by the JS code
+
+# # Relative URL to external documentation
+# externalDocs:
+#   url: /docs
+#   description: Find more info here
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+tags:
+  - name: Users
+    description: User management and authentication operations
+  - name: Organizations
+    description: Organization management operations
+  - name: Chats
+    description: Chat session management operations
+  - name: Messages
+    description: Chat message operations
+  - name: Analytics
+    description: Analytics and reporting operations
+  - name: Export
+    description: Data export operations

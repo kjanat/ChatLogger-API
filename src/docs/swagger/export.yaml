@@ -1,0 +1,153 @@
+tags:
+  - name: Export
+    description: Data export endpoints for backup and analysis
+
+paths:
+  /export/chats:
+    get:
+      summary: Export chats and messages for a given date range
+      tags: [Export]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for export (YYYY-MM-DD). Defaults to 30 days ago if not provided.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for export (YYYY-MM-DD). Defaults to today if not provided.
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+          description: Export format (json or csv)
+      responses:
+        200:
+          description: Chat data exported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Export successful
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date
+                        example: 2025-03-14
+                      endDate:
+                        type: string
+                        format: date
+                        example: 2025-04-13
+                      totalChats:
+                        type: integer
+                        example: 45
+                      totalMessages:
+                        type: integer
+                        example: 1200
+                      format:
+                        type: string
+                        example: json
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: 2025-04-13T10:00:00Z
+                  data:
+                    type: array
+                    items:
+                      type: object
+        400:
+          description: Invalid parameters
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: No chats found
+        500:
+          description: Server error
+
+  /export/users/activity:
+    get:
+      summary: Export user activity data
+      tags: [Export]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          description: Start date for export (YYYY-MM-DD). Defaults to 30 days ago if not provided.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          description: End date for export (YYYY-MM-DD). Defaults to today if not provided.
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+          description: Export format (json or csv)
+      responses:
+        200:
+          description: User activity exported successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User activity export successful
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date
+                        example: 2025-03-14
+                      endDate:
+                        type: string
+                        format: date
+                        example: 2025-04-13
+                      totalUsers:
+                        type: integer
+                        example: 100
+                      format:
+                        type: string
+                        example: json
+                      timestamp:
+                        type: string
+                        format: date-time
+                        example: 2025-04-13T10:00:00Z
+                  data:
+                    type: array
+                    items:
+                      type: object
+        400:
+          description: Invalid parameters
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: No users found
+        500:
+          description: Server error

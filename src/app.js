@@ -3,21 +3,39 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const { defaultLimiter } = require('./middleware/rate-limit');
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
 const messageRoutes = require('./routes/message.routes');
 const organizationRoutes = require('./routes/organization.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
+const exportRoutes = require('./routes/export.routes'); // Add the new export routes
 const config = require('./config/config');
+const { version } = require('./config/version');
+const setupSwagger = require('./docs/swagger');
 const logger = require('./utils/logger');
 
 // Initialize Express app
 const app = express();
 
 // Security middleware
-app.use(helmet());
-app.use(cors());
+app.use(helmet(
+    // {
+    //     contentSecurityPolicy: false, // Disable CSP for simplicity, customize as needed
+    //     crossOriginEmbedderPolicy: false, // Disable COEP for simplicity, customize as needed
+    //     crossOriginOpenerPolicy: false, // Disable COOP for simplicity, customize as needed
+    //     crossOriginResourcePolicy: false, // Disable CORP for simplicity, customize as needed
+    // }
+));
+
+// CORS configuration - explicitly allow all origins
+app.use(cors(
+    // {
+    //     origin: '*', // Allow all origins
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all common HTTP methods
+    //     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'], // Allow common headers
+    //     credentials: true // Allow cookies to be sent with requests
+    // }
+));
 
 // Request logger middleware
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
@@ -30,67 +48,45 @@ app.use(express.urlencoded({ extended: true }));
 app.use(defaultLimiter);
 
 // API Routes
-app.use('/api/users', userRoutes);
-app.use('/api/chats', chatRoutes);
-app.use('/api/organizations', organizationRoutes);
-app.use('/api', messageRoutes);
+app.use(`/${config.apiEffectivePath}/users`, userRoutes);
+app.use(`/${config.apiEffectivePath}/chats`, chatRoutes);
+app.use(`/${config.apiEffectivePath}/organizations`, organizationRoutes);
+app.use(`/${config.apiEffectivePath}/analytics`, analyticsRoutes);
+app.use(`/${config.apiEffectivePath}/export`, exportRoutes);
+app.use(`/${config.apiEffectivePath}/messages`, messageRoutes);
 
-// Swagger documentation setup
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'ChatLogger API',
-            version: '0.1.1',
-            description: 'API for storing and retrieving chat interactions',
-        },
-        servers: [
-            {
-                url: `http://localhost:${config.port}/api`,
-                description: 'Development server',
-            },
-        ],
-        components: {
-            securitySchemes: {
-                bearerAuth: {
-                    type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'JWT',
-                    description: 'Enter JWT token'
-                },
-                apiKeyAuth: {
-                    type: 'apiKey',
-                    in: 'header',
-                    name: 'x-api-key',
-                    description: 'Enter API key'
-                }
-            }
-        },
-        security: [
-            {
-                bearerAuth: [],
-                apiKeyAuth: []
-            }
-        ]
-    },
-    apis: ['./src/routes/*.js'],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// Setup Swagger documentation using centralized config
+setupSwagger(app);
 
 // Root route
-app.get('/', (req, res) => {
+app.get(`/${config.apiEffectivePath}`, (req, res) => {
     res.json({
         message: 'Welcome to the ChatLogger API',
-        docs: `/api-docs`,
+        version: version,
+        documentation: {
+            swagger: `${config.apiDocumentationPath}`,
+            swaggerjson: `${config.apiDocumentationUrl}`,
+        },
+        healthz: `/${config.apiEffectivePath}/healthz`,
+        // } `/${config.documentationUrlSlug}`,
+        // swaggerdocs: `/${config.documentationSlug}`,
     });
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get(`/healthz`, (req, res) => {
     res.status(200).json({
         status: 'ok',
+        version: version,
+        uptime: process.uptime(),
+        timestamp: new Date()
+    });
+});
+
+app.get(`/${config.apiEffectivePath}/healthz`, (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        version: version,
         uptime: process.uptime(),
         timestamp: new Date()
     });

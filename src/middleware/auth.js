@@ -32,6 +32,7 @@ const authenticateJWT = async (req, res, next) => {
 // Middleware to authenticate with API key
 const authenticateApiKey = async (req, res, next) => {
     try {
+        // Look for x-api-key in headers
         const apiKey = req.headers['x-api-key'];
 
         if (!apiKey) {

@@ -12,6 +12,9 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 - API rate limiting
 - Comprehensive request logging
 - Swagger API documentation
+- Docker support for easy deployment
+- Analytics and reporting for chat activity
+- Data export in JSON and CSV formats
 
 ## Getting Started
 
@@ -19,28 +22,39 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 
 - Node.js (v14 or higher)
 - MongoDB (local instance or Atlas)
+- Docker and Docker Compose (optional)
 
 ### Installation
 
-1. Clone the repository
+#### Standard Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/kjanat/ChatLogger.git
+    cd ChatLogger
+    ```
+
 2. Install dependencies:
 
-```bash
-npm install
-```
+    ```bash
+    npm install
+    ```
 
-3. Create a `.env` file in the root directory with the following variables:
+3. Create or copy the [.env.example](.env.example) to a `.env` file in the root directory with the following variables:
 
-```sh
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/chatlogger
-JWT_SECRET=your_jwt_secret_key_change_in_production
-NODE_ENV=development
-RATE_LIMIT_WINDOW_MS=15*60*1000
-RATE_LIMIT_MAX=100
-```
+    ```sh
+    PORT=3000
+    MONGODB_URI=mongodb://localhost:27017/chatlogger
+    JWT_SECRET=your_jwt_secret_key_change_in_production
+    NODE_ENV=development
+    RATE_LIMIT_WINDOW_MS=900000
+    RATE_LIMIT_MAX=100
+    ```
 
 ### Running the Application
+
+#### Local Development
 
 For development (with auto-restart):
 
@@ -54,12 +68,39 @@ For production:
 npm start
 ```
 
+#### Docker Deployment
+
+You can easily run the application using Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This will start:
+
+- MongoDB instance on port 27017
+- Mongo Express (MongoDB admin interface) on port 8081
+- ChatLogger application on port 3000
+
+To stop the containers:
+
+```bash
+docker-compose down
+```
+
+If you need to rebuild the application container:
+
+```bash
+docker-compose build app
+docker-compose up -d
+```
+
 ## API Documentation
 
 When the server is running, you can access the Swagger documentation at:
 
 ```plaintext
-http://localhost:3000/api-docs
+http://localhost:3000/api/v1/docs
 ```
 
 ## API Endpoints
@@ -89,6 +130,26 @@ http://localhost:3000/api-docs
 - `PUT /api/:chatId/messages/:messageId` - Update a message
 - `DELETE /api/:chatId/messages/:messageId` - Delete a message
 
+### Organizations
+
+- `POST /api/organizations` - Create a new organization
+- `GET /api/organizations` - Get all organizations (superadmin only)
+- `GET /api/organizations/current` - Get the current user's organization
+- `GET /api/organizations/:id` - Get a specific organization by ID
+- `PUT /api/organizations/:id` - Update an organization's details
+- `POST /api/organizations/:id/regenerate-api-key` - Regenerate an API key for an organization
+
+### Analytics
+
+- `GET /api/analytics/activity` - Retrieve chat activity metrics by date
+- `GET /api/analytics/messages/stats` - Get message statistics grouped by role
+- `GET /api/analytics/users/top` - List top users by chat activity
+
+### Export
+
+- `GET /api/export/chats` - Export chats and messages for a given date range
+- `GET /api/export/users/activity` - Export user activity data
+
 ## Message Structure
 
 The API supports storing various message types with the following structure:
@@ -114,6 +175,66 @@ The API supports storing various message types with the following structure:
 }
 ```
 
-## License
+## Version Management
 
-[MIT](LICENSE)
+ChatLogger uses a centralized version management system with the `semver` package to ensure proper semantic versioning. The version is maintained in a single place (`src/config/version.js`) and referenced throughout the application.
+
+### Versioning Scripts
+
+You can easily bump the version across the entire application using npm scripts:
+
+```bash
+# Standard version bumping
+npm run version:patch      # 0.1.1 -> 0.1.2
+npm run version:minor      # 0.1.1 -> 0.2.0
+npm run version:major      # 0.1.1 -> 1.0.0
+
+# Pre-release versioning
+npm run version:prepatch   # 0.1.1 -> 0.1.2-0
+npm run version:preminor   # 0.1.1 -> 0.2.0-0
+npm run version:premajor   # 0.1.1 -> 1.0.0-0
+npm run version:prerelease # 0.1.1 -> 0.1.2-0 (if no pre-release)
+                           # 0.1.2-0 -> 0.1.2-1 (if already pre-release)
+
+# Common pre-release identifiers
+npm run version:alpha      # 0.1.1 -> 0.1.2-alpha.0
+npm run version:beta       # 0.1.1 -> 0.1.2-beta.0
+npm run version:rc         # 0.1.1 -> 0.1.2-rc.0
+```
+
+These commands will:
+
+- Update the version in `src/config/version.js`
+- Update the version in `package.json`
+- Commit the changes to git with a version bump message
+- Create a git tag with the new version (e.g., "v0.1.2" or "v0.1.2-beta.0")
+
+### Docker Build with Version
+
+When building a Docker image, the version will be automatically included in the image metadata:
+
+```bash
+# Build with current version
+npm run docker:build
+```
+
+This will:
+
+- Build a Docker image with the current version from version.js
+- Tag the image as both `chatlogger:<version>` and `chatlogger:latest`
+
+You can also start the entire application stack using Docker Compose with the current version:
+
+```bash
+# Start with Docker Compose using current version
+npm run docker:compose
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+ChatLogger is licensed under the MIT License. This means you are free to use, modify, and distribute the software, provided that the original copyright notice and permission notice are included in all copies or substantial portions of the software.
+
+For more details, see the [LICENSE](LICENSE) file included in this repository.

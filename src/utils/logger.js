@@ -1,14 +1,15 @@
 const winston = require('winston');
-const config = require('../config/config');
+// Import bootstrap to get consistent environment
+const { nodeEnv } = require('./bootstrap');
 
 // Define log format
 const logFormat = winston.format.printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
 });
 
-// Create a logger instance
+// Create a logger instance that supports various log levels: error, warn, info, http, verbose, debug, silly
 const logger = winston.createLogger({
-    level: config.nodeEnv === 'development' ? 'debug' : 'info',
+    level: nodeEnv === 'development' ? 'debug' : 'info',
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.colorize(),

@@ -21,12 +21,11 @@ const chatSchema = new mongoose.Schema(
         source: {
             type: String,
             required: true,
-            enum: ['web', 'mobile', 'api'],
+            enum: ['web', 'mobile', 'api', 'widget'],
             default: 'web',
         },
         metadata: {
-            type: Map,
-            of: mongoose.Schema.Types.Mixed,
+            type: Object,
             default: {},
         },
         tags: {

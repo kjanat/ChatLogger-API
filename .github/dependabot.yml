@@ -1,0 +1,87 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      versioning-strategy: auto
+      labels:
+          - 'dependencies'
+          - 'npm'
+      commit-message:
+          prefix: 'npm'
+          include: 'scope'
+      reviewers:
+          - 'kjanat'
+      allow:
+          - dependency-type: 'direct'
+    - package-ecosystem: 'docker'
+      directory: '/'
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      versioning-strategy: auto
+      labels:
+          - 'dependencies'
+          - 'docker'
+      commit-message:
+          prefix: 'docker'
+          include: 'scope'
+      reviewers:
+          - 'kjanat'
+      allow:
+          - dependency-type: 'direct'
+    - package-ecosystem: 'docker-compose'
+      directory: '/'
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      versioning-strategy: auto
+      labels:
+          - 'dependencies'
+          - 'docker-compose'
+      commit-message:
+          prefix: 'docker-compose'
+          include: 'scope'
+      reviewers:
+          - 'kjanat'
+      allow:
+          - dependency-type: 'direct'
+    - package-ecosystem: 'github-actions'
+      directory: '/.github/workflows/'
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      versioning-strategy: auto
+      labels:
+          - 'dependencies'
+          - 'github-actions'
+      commit-message:
+          prefix: 'github-actions'
+          include: 'scope'
+      reviewers:
+          - 'kjanat'
+      allow:
+          - dependency-type: 'direct'
+    - package-ecosystem: 'devcontainers'
+      directory: '/'
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      versioning-strategy: auto
+      labels:
+          - 'dependencies'
+          - 'devcontainers'
+      commit-message:
+          prefix: 'devcontainers'
+          include: 'scope'
+      reviewers:
+          - 'kjanat'
+      allow:
+          - dependency-type: 'direct'
