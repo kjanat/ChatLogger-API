@@ -1,7 +1,7 @@
 {
     "name": "@kjanat/chatlogger",
     "description": "API for storing and retrieving chat interactions",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "author": "Kaj Kowalski <dev@kajkowalski.nl> (https://github.com/kjanat)",
     "license": "MIT",
     "main": "src/server.js",
