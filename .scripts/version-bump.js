@@ -131,7 +131,7 @@ try {
   
   console.log('\n✓ Changes committed and tagged successfully!');
   console.log(`\nTo push changes and tag to remote repository:`);
-  console.log(`  git push origin main`);
+  console.log(`  git push origin master`);
   console.log(`  git push origin ${newVersionWithV}`);
   
   console.log(`\nTo build Docker image with new version:`);

@@ -10,7 +10,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
-      versioning-strategy: auto
       labels:
           - 'dependencies'
           - 'npm'
@@ -26,7 +25,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
-      versioning-strategy: auto
       labels:
           - 'dependencies'
           - 'docker'
@@ -42,7 +40,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
-      versioning-strategy: auto
       labels:
           - 'dependencies'
           - 'docker-compose'
@@ -58,7 +55,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
-      versioning-strategy: auto
       labels:
           - 'dependencies'
           - 'github-actions'
@@ -74,7 +70,6 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
-      versioning-strategy: auto
       labels:
           - 'dependencies'
           - 'devcontainers'

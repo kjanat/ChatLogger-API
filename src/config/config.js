@@ -3,6 +3,7 @@ const logger = require('../utils/logger');
 
 const getMongoDbUri = () => {
     const nodeEnv = process.env.NODE_ENV || 'development';
+    logger.info(`NODE_ENV: ${nodeEnv}`);
 
     // Map NODE_ENV to corresponding suffix
     const envSuffixMap = {
@@ -10,17 +11,18 @@ const getMongoDbUri = () => {
         staging: 'STG',
         development: 'DEV',
         testing: 'TST',
-        test: 'TST', // Allow 'test' as alias
+        test: 'TEST', // Allow 'test' as alias
     };
 
     const suffix = envSuffixMap[nodeEnv];
     const envSpecificUriVar = suffix ? `MONGODB_URI_${suffix}` : null;
 
-    logger.debug(`Environment: ${nodeEnv}`);
-    logger.debug(`MongoDB URI variable: ${envSpecificUriVar}`);
+    logger.info(`Environment: ${nodeEnv}`);
+    logger.info(`MongoDB URI variable: ${envSpecificUriVar}`);
 
     // Use base URI if environment-specific one is not defined
     const mongoUri = process.env[envSpecificUriVar] || process.env.MONGODB_URI;
+    logger.info(`MongoDB URI: ${mongoUri}`);
 
     if (nodeEnv === 'test' && !mongoUri) {
         return 'mongodb://127.0.0.1:27017/chatlogger_test';
@@ -31,7 +33,7 @@ const getMongoDbUri = () => {
         throw new Error('MongoDB URI is not set. Please configure `MONGODB_URI` in .env file.');
     }
 
-    logger.debug(`Using MongoDB URI from ${envSpecificUriVar || process.env.MONGODB_URI}`);
+    logger.info(`Using MongoDB URI from ${envSpecificUriVar || process.env.MONGODB_URI}`);
     return mongoUri;
 };
 
