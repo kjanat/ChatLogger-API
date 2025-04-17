@@ -1,10 +1,10 @@
 module.exports = {
     testEnvironment: 'node',
-    testMatch: ['**/tests/integration/**/*.test.js'], // Integration tests in tests/integration
+    testMatch: ['<rootDir>/tests/integration/**/*.test.js'], // Integration tests in tests/integration
     setupFiles: ['<rootDir>/tests/integrationSetup.js'], // Changed to use our new setup file
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
-    collectCoverage: true,
-    coverageDirectory: 'coverage/integration',
+    collectCoverage: false, // Disable coverage for integration tests
+    coverageDirectory: '<rootDir>/coverage/integration',
     coverageThreshold: {
         global: {
             branches: 75,

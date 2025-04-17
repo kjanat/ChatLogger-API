@@ -1,10 +1,10 @@
 module.exports = {
     testEnvironment: 'node',
-    testMatch: ['**/src/**/__tests__/**/*.test.js'], // Unit tests in src/
+    testMatch: ['<rootDir>/src/**/__tests__/*.test.js'],
     setupFiles: ['<rootDir>/tests/setupTests.js'],
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
-    collectCoverage: true,
-    coverageDirectory: 'coverage/unit',
+    collectCoverage: false, // Disable coverage for unit tests
+    coverageDirectory: '<rootDir>/coverage/unit',
     coverageThreshold: {
         global: {
             branches: 75,

@@ -7,13 +7,24 @@ const paginateResults = require('../middleware/pagination');
 const addMessage = async (req, res) => {
     try {
         const { chatId } = req.params;
-        const { role, content, name, functionCall, toolCalls, metadata, tokens, promptTokens, completionTokens, latency } = req.body;
+        const {
+            role,
+            content,
+            name,
+            functionCall,
+            toolCalls,
+            metadata,
+            tokens,
+            promptTokens,
+            completionTokens,
+            latency,
+        } = req.body;
 
         // Check if chat exists and belongs to user and the correct organization
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
 
         if (!chat) {
@@ -32,7 +43,7 @@ const addMessage = async (req, res) => {
             tokens,
             promptTokens,
             completionTokens,
-            latency
+            latency,
         });
 
         await message.save();
@@ -52,7 +63,7 @@ const addMessage = async (req, res) => {
 };
 
 // Get all messages for a specific chat
-const getChatMessages = async (req, res, next) => {
+const getChatMessages = async (req, res, _next) => {
     try {
         const query = { chatId: req.params.chatId };
 
@@ -74,7 +85,7 @@ const getMessageById = async (req, res) => {
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
 
         if (!chat) {
@@ -107,7 +118,7 @@ const updateMessage = async (req, res) => {
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
 
         if (!chat) {
@@ -148,7 +159,7 @@ const deleteMessage = async (req, res) => {
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
 
         if (!chat) {
@@ -189,7 +200,7 @@ const batchAddMessages = async (req, res) => {
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
 
         if (!chat) {
@@ -208,7 +219,7 @@ const batchAddMessages = async (req, res) => {
             tokens: msg.tokens || 0,
             promptTokens: msg.promptTokens || 0,
             completionTokens: msg.completionTokens || 0,
-            latency: msg.latency || 0
+            latency: msg.latency || 0,
         }));
 
         // Insert messages in bulk

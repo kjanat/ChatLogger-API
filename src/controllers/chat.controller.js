@@ -7,10 +7,10 @@ const paginateResults = require('../middleware/pagination');
 const createChat = async (req, res) => {
     try {
         const { title, source = 'web', tags = [], metadata = {} } = req.body;
-        
+
         // Get organization from request (set by middleware)
         const organizationId = req.organization ? req.organization._id : req.user.organizationId;
-        
+
         if (!organizationId) {
             return res.status(400).json({ message: 'Organization context is required' });
         }
@@ -23,9 +23,9 @@ const createChat = async (req, res) => {
             tags,
             metadata,
         });
-        
+
         await chat.save();
-        
+
         res.status(201).json({
             message: 'Chat session created successfully',
             chat,
@@ -37,7 +37,7 @@ const createChat = async (req, res) => {
 };
 
 // Get all chats for current user
-const getUserChats = async (req, res, next) => {
+const getUserChats = async (req, res, _next) => {
     try {
         const query = {
             userId: req.user._id,
@@ -61,17 +61,17 @@ const getUserChats = async (req, res, next) => {
 const getChatById = async (req, res) => {
     try {
         const { chatId } = req.params;
-        
+
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
-        
+
         if (!chat) {
             return res.status(404).json({ message: 'Chat not found' });
         }
-        
+
         res.status(200).json({ chat });
     } catch (error) {
         logger.error(`Get chat by ID error: ${error.message}`);
@@ -84,24 +84,24 @@ const updateChat = async (req, res) => {
     try {
         const { chatId } = req.params;
         const { title, tags, metadata, isActive } = req.body;
-        
+
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
-        
+
         if (!chat) {
             return res.status(404).json({ message: 'Chat not found' });
         }
-        
+
         if (title) chat.title = title;
         if (tags) chat.tags = tags;
         if (metadata) chat.metadata = { ...chat.metadata, ...metadata };
         if (isActive !== undefined) chat.isActive = isActive;
-        
+
         await chat.save();
-        
+
         res.status(200).json({
             message: 'Chat updated successfully',
             chat,
@@ -116,23 +116,23 @@ const updateChat = async (req, res) => {
 const deleteChat = async (req, res) => {
     try {
         const { chatId } = req.params;
-        
+
         const chat = await Chat.findOne({
             _id: chatId,
             userId: req.user._id,
-            organizationId: req.organization ? req.organization._id : req.user.organizationId
+            organizationId: req.organization ? req.organization._id : req.user.organizationId,
         });
-        
+
         if (!chat) {
             return res.status(404).json({ message: 'Chat not found' });
         }
-        
+
         // Delete all messages associated with this chat
         await Message.deleteMany({ chatId });
-        
+
         // Delete the chat
         await Chat.findByIdAndDelete(chatId);
-        
+
         res.status(200).json({
             message: 'Chat and associated messages deleted successfully',
         });
@@ -143,7 +143,7 @@ const deleteChat = async (req, res) => {
 };
 
 // Search chats by title or tags
-const searchChats = async (req, res, next) => {
+const searchChats = async (req, res, _next) => {
     try {
         const searchQuery = {
             userId: req.user._id,

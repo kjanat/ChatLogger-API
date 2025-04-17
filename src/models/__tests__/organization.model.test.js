@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Organization = require('../organization.model');
 const setupTestDB = require('../../../tests/setupTests');
 
@@ -23,12 +22,12 @@ describe('Organization Model', () => {
             name: 'Test Organization 1',
             contactEmail: 'contact@testorg.com',
             description: 'A test organization',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         };
 
         const organization = new Organization(validOrgData);
         await organization.save();
-        
+
         const savedOrg = await Organization.findById(organization._id);
         expect(savedOrg).toBeTruthy();
         expect(savedOrg.name).toBe('Test Organization 1');
@@ -38,7 +37,7 @@ describe('Organization Model', () => {
     it('should require name field', async () => {
         const orgWithoutName = new Organization({
             contactEmail: 'contact@testorg.com',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         });
 
         let validationError;
@@ -55,12 +54,12 @@ describe('Organization Model', () => {
         const orgData = {
             name: '  Test Organization 2  ',
             contactEmail: 'contact@testorg.com',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         };
 
         const organization = new Organization(orgData);
         await organization.save();
-        
+
         expect(organization.name).toBe('Test Organization 2');
     });
 
@@ -68,12 +67,12 @@ describe('Organization Model', () => {
         const orgData = {
             name: 'Test Organization 3',
             contactEmail: 'CONTACT@TESTORG.COM',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         };
 
         const organization = new Organization(orgData);
         await organization.save();
-        
+
         expect(organization.contactEmail).toBe('contact@testorg.com');
     });
 
@@ -82,12 +81,12 @@ describe('Organization Model', () => {
             name: 'Test Organization 4',
             contactEmail: 'contact@testorg.com',
             description: '  A test organization  ',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         };
 
         const organization = new Organization(orgData);
         await organization.save();
-        
+
         expect(organization.description).toBe('A test organization');
     });
 
@@ -95,12 +94,12 @@ describe('Organization Model', () => {
         const orgData = {
             name: 'Test Organization 5',
             contactEmail: 'contact@testorg.com',
-            apiKey: 'test-api-key-12345'
+            apiKey: 'test-api-key-12345',
         };
 
         const organization = new Organization(orgData);
         await organization.save();
-        
+
         expect(organization.isActive).toBe(true);
         expect(organization.description).toBe('');
     });
@@ -117,24 +116,24 @@ describe('Organization Model', () => {
         const orgData1 = {
             name: 'Unique Org',
             contactEmail: 'contact@testorg.com',
-            apiKey: 'test-api-key-123456'
+            apiKey: 'test-api-key-123456',
         };
         await new Organization(orgData1).save();
-        
+
         // Try to create second organization with same name
         const orgData2 = {
             name: 'Unique Org',
             contactEmail: 'different@testorg.com',
-            apiKey: 'test-api-key-789012'
+            apiKey: 'test-api-key-789012',
         };
-        
+
         let duplicateError;
         try {
             await new Organization(orgData2).save();
         } catch (error) {
             duplicateError = error;
         }
-        
+
         expect(duplicateError).toBeDefined();
         expect(duplicateError.code).toBe(11000); // MongoDB duplicate key error code
     });

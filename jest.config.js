@@ -6,7 +6,7 @@ const config = {
             displayName: 'unit',
             testMatch: ['**/src/**/__tests__/**/*.test.js'],
             setupFiles: ['<rootDir>/tests/setupTests.js'],
-            coverageDirectory: '<rootDir>/coverage/unit',
+            // coverageDirectory: '<rootDir>/coverage/unit',
             restoreMocks: true, // Add this to restore mocks automatically after each test
             resetMocks: false, // Don't reset mocks between tests, but restore their implementation
         },
@@ -14,7 +14,7 @@ const config = {
             displayName: 'integration',
             testMatch: ['**/tests/integration/**/*.test.js'],
             setupFiles: ['<rootDir>/tests/integrationSetup.js'],
-            coverageDirectory: '<rootDir>/coverage/integration',
+            // coverageDirectory: '<rootDir>/coverage/integration',
             restoreMocks: true, // Add this to restore mocks automatically after each test
             resetMocks: false, // Don't reset mocks between tests, but restore their implementation
         },

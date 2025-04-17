@@ -1,12 +1,11 @@
-const dotenv = require('dotenv');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
 const logger = require('../src/utils/logger');
 
 // Set required environment variables for testing if they don't exist
 if (!process.env.JWT_SECRET) {
-  process.env.JWT_SECRET = 'test-jwt-secret-for-unit-tests';
-  logger.info('Setting JWT_SECRET for unit tests');
+    process.env.JWT_SECRET = 'test-jwt-secret-for-unit-tests';
+    logger.info('Setting JWT_SECRET for unit tests');
 }
 
 jest.mock('dotenv', () => {
@@ -26,7 +25,7 @@ module.exports = async () => {
         logger.info('MongoDB connection already established');
         return;
     }
-    
+
     // Create the MongoDB Memory Server
     logger.info('Creating the MongoDB Memory Server');
     mongoServer = await MongoMemoryServer.create();
@@ -47,7 +46,7 @@ module.exports.clearDatabase = async () => {
         logger.info('No active connection to clear');
         return;
     }
-    
+
     const collections = mongoose.connection.collections;
     for (const key in collections) {
         const collection = collections[key];
@@ -61,12 +60,12 @@ module.exports.closeDatabase = async () => {
         logger.warn('MongoDB connection already closed');
         return;
     }
-    
+
     try {
         await mongoose.connection.dropDatabase();
         await mongoose.disconnect();
         logger.info('MongoDB connection closed');
-        
+
         if (mongoServer) {
             await mongoServer.stop();
             logger.info('MongoDB memory server stopped');

@@ -82,9 +82,11 @@ if (process.env.NODE_ENV === 'test') {
     config.resetConfigForTests = function () {
         this.mongodbUri = getMongoDbUri();
         this.jwtSecret = getJwtSecret();
+        this.host = 'localhost';
         logger.debug('Config reset for tests:', {
             mongodbUriSet: !!this.mongodbUri,
             jwtSecretSet: !!this.jwtSecret,
+            host: this.host,
         });
         return this;
     };

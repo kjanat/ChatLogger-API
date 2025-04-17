@@ -2,13 +2,12 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 // const yaml = require('js-yaml');
-const YAML = require('yaml')
+const YAML = require('yaml');
 const fs = require('fs');
 const path = require('path');
 const { version } = require('../config/version');
 const config = require('../config/config');
 const logger = require('../utils/logger');
-const { url } = require('inspector');
 
 // Load base Swagger definition from YAML file
 const definitionPath = path.join(__dirname, 'swagger', 'definition.yaml');
@@ -26,25 +25,26 @@ try {
 swaggerDefinition.info.version = version;
 
 // Add server configurations
-swaggerDefinition.servers = [{
+swaggerDefinition.servers = [
+    {
         url: `/${config.apiEffectivePath}`,
-        description: "The current API server"
+        description: 'The current API server',
     },
     {
         url: `https://{environment}.chatlogger.kjanat.com/${config.apiVersion}`,
-        description: "The production API server",
+        description: 'The production API server',
         variables: {
             environment: {
                 enum: [
-                    "api",        // Production server
-                    "api.dev",    // Development server
-                    "api.staging" // Staging server
+                    'api', // Production server
+                    'api.dev', // Development server
+                    'api.staging', // Staging server
                 ],
-                default: "api",
-                description: "The environment for the API server"
-            }
-        }
-    }
+                default: 'api',
+                description: 'The environment for the API server',
+            },
+        },
+    },
 ];
 
 // Swagger options
@@ -60,21 +60,26 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
  * Configure Swagger middleware for Express
  * @param {Object} app - Express app
  */
-const setupSwagger = (app) => {
+const setupSwagger = app => {
     // Serve Swagger documentation
     app.use(config.apiDocumentationPath, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    
+
     /* app.use('/api-docs', function(req, res, next){
         swaggerSpec.host = req.get('host');
         req.swaggerDoc = swaggerSpec;
         next();
     }, swaggerUi.serveFiles(swaggerSpec, swaggerOptions), swaggerUi.setup(swaggerSpec)); */
 
-    app.use('/api-docs', function(req, res, next){
-        swaggerSpec.host = req.get('host');
-        req.swaggerDoc = swaggerSpec;
-        next();
-    }, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use(
+        '/api-docs',
+        function (req, res, next) {
+            swaggerSpec.host = req.get('host');
+            req.swaggerDoc = swaggerSpec;
+            next();
+        },
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerSpec),
+    );
 
     // Serve swagger.json
     app.get(config.apiDocumentationUrl, (req, res) => {

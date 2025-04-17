@@ -1,6 +1,7 @@
-const crypto = require('crypto');
+import { randomBytes } from 'crypto';
+import { logger } from '../logger.js';
 
-const secret = crypto.randomBytes(64).toString('hex'); // Generates a 128-character hex string
-console.log(secret);
+const secret = randomBytes(64).toString('hex'); // Generates a 128-character hex string
+logger.debug(secret);
 
-return secret;
+export default secret;

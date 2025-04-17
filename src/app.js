@@ -18,24 +18,26 @@ const logger = require('./utils/logger');
 const app = express();
 
 // Security middleware
-app.use(helmet(
+app.use(
+    helmet(),
     // {
     //     contentSecurityPolicy: false, // Disable CSP for simplicity, customize as needed
     //     crossOriginEmbedderPolicy: false, // Disable COEP for simplicity, customize as needed
     //     crossOriginOpenerPolicy: false, // Disable COOP for simplicity, customize as needed
     //     crossOriginResourcePolicy: false, // Disable CORP for simplicity, customize as needed
     // }
-));
+);
 
 // CORS configuration - explicitly allow all origins
-app.use(cors(
+app.use(
+    cors(),
     // {
     //     origin: '*', // Allow all origins
     //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all common HTTP methods
     //     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'], // Allow common headers
     //     credentials: true // Allow cookies to be sent with requests
     // }
-));
+);
 
 // Request logger middleware
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
@@ -79,7 +81,7 @@ app.get(`/healthz`, (req, res) => {
         status: 'ok',
         version: version,
         uptime: process.uptime(),
-        timestamp: new Date()
+        timestamp: new Date(),
     });
 });
 
@@ -88,7 +90,7 @@ app.get(`/${config.apiEffectivePath}/healthz`, (req, res) => {
         status: 'ok',
         version: version,
         uptime: process.uptime(),
-        timestamp: new Date()
+        timestamp: new Date(),
     });
 });
 
@@ -98,7 +100,7 @@ app.use((req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
     logger.error(`Error: ${err.message}`);
     res.status(err.status || 500).json({
         message: err.message || 'Something went wrong on the server',
