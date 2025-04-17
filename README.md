@@ -23,7 +23,7 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - MongoDB (local instance or Atlas)
 - Docker and Docker Compose (optional, for containerized deployment)
 
