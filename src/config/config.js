@@ -1,5 +1,15 @@
-require('../utils/bootstrap');
+const dotenv = require('dotenv');
 const logger = require('../utils/logger');
+
+// Load environment variables
+dotenv.config();
+
+// Set default NODE_ENV if not defined
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development';
+    console.log('[config] NODE_ENV is set to default: `development`');
+}
+console.log(`[config] Current environment: \`${process.env.NODE_ENV}\``);
 
 const getMongoDbUri = () => {
     const nodeEnv = process.env.NODE_ENV || 'development';
@@ -29,14 +39,14 @@ const getMongoDbUri = () => {
     }
 
     if (!mongoUri) {
-        logger.error('MongoDB URI is not set. Please configure `MONGODB_URI` in .env file.');
-        throw new Error('MongoDB URI is not set. Please configure `MONGODB_URI` in .env file.');
+        const errorMsg = `MongoDB URI is not set. Please configure MONGODB_URI${suffix ? ` or ${envSpecificUriVar}` : ''} in .env file.`;
+        logger.error(errorMsg);
+        throw new Error(errorMsg);
     }
 
-    logger.info(`Using MongoDB URI from ${envSpecificUriVar || process.env.MONGODB_URI}`);
+    logger.info(`Using MongoDB URI from ${envSpecificUriVar || 'MONGODB_URI'}`);
     return mongoUri;
 };
-
 
 const getJwtSecret = () => {
     const secret = process.env.JWT_SECRET;

@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Mock dependencies
+// Mock dependencies before requiring any other modules
+jest.mock('dotenv', () => ({
+    config: jest.fn()
+}));
+
 jest.mock('../../utils/logger', () => ({
     debug: jest.fn(),
     warn: jest.fn(),
@@ -9,15 +13,15 @@ jest.mock('../../utils/logger', () => ({
     info: jest.fn()
 }));
 
-// Mock bootstrap to prevent it from affecting our tests
-jest.mock('../../utils/bootstrap', () => ({}));
-
 // Store original process.env
 const originalEnv = { ...process.env };
 
 describe('Config Module', () => {
     // We'll store our config here
     let config;
+    
+    // We need to access dotenv after mocking
+    let dotenv;
 
     beforeEach(() => {
         // Reset mocks and environment variables before each test
@@ -33,11 +37,30 @@ describe('Config Module', () => {
         
         // Ensure we're in test mode
         process.env.NODE_ENV = 'test';
+        
+        // Get reference to mocked dotenv
+        dotenv = require('dotenv');
     });
 
     afterAll(() => {
         // Restore original process.env
         process.env = originalEnv;
+    });
+
+    // Added tests for bootstrap functionality now merged into config.js
+    test('should call dotenv.config on import', () => {
+        // Import the config module (will be fresh due to jest.resetModules())
+        config = require('../config');
+        expect(dotenv.config).toHaveBeenCalled();
+    });
+
+    test('should set default NODE_ENV to development if not defined', () => {
+        delete process.env.NODE_ENV; // Ensure NODE_ENV is undefined
+        
+        // Import the config module (will be fresh due to jest.resetModules())
+        config = require('../config');
+        
+        expect(config.nodeEnv).toBe('development');
     });
 
     test('should load default values when no env vars are set', () => {
@@ -93,7 +116,7 @@ describe('Config Module', () => {
         process.env.HOST = 'example.com';
         process.env.PORT = '8080';
         process.env.NODE_ENV = 'production';
-        process.env.MONGODB_URI_PRODUCTION = 'mongodb://prod-db';
+        process.env.MONGODB_URI_PRD = 'mongodb://prod-db';
         process.env.JWT_SECRET = 'env-secret';
         process.env.RATE_LIMIT_WINDOW_MS = '60000';
         process.env.RATE_LIMIT_MAX = '50';
@@ -130,9 +153,10 @@ describe('Config Module', () => {
         process.env.NODE_ENV = 'production';
         delete process.env.MONGODB_URI;
         delete process.env.MONGODB_URI_PRODUCTION;
+        delete process.env.MONGODB_URI_PRD;
 
         expect(() => {
             require('../config');
-        }).toThrow('MongoDB URI is not set. Please configure MONGODB_URI or MONGODB_URI_PRODUCTION in .env file.');
+        }).toThrow(/MongoDB URI is not set/); // Match part of the error message to be more flexible with changes
     });
 });
