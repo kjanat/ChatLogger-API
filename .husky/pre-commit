@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Cross-platform friendly hook for both Linux and Windows
+echo "🧪 Running lint-staged..."
+npx lint-staged
+
+# Running tests on changed files
+echo "🧪 Running unit tests on changed files..."
+# Use node to create a cross-platform compatible command
+node -e "
+  const { execSync } = require('child_process');
+  try {
+    // Get list of staged JS files
+    const files = execSync('git diff --cached --name-only').toString().trim().split('\n')
+      .filter(file => file.endsWith('.js'));
+    
+    if (files.length > 0) {
+      // Run tests only if there are JS files changed
+      console.log('Running tests for changed files:', files.join(', '));
+      execSync('npm run test:unit -- --findRelatedTests ' + files.join(' '), { stdio: 'inherit' });
+    } else {
+      console.log('No JS files changed, skipping tests');
+    }
+  } catch (error) {
+    console.error('Error running tests:', error.message);
+    process.exit(1);
+  }
+"

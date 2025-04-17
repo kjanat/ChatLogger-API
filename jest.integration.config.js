@@ -3,7 +3,7 @@ module.exports = {
     testMatch: ['**/tests/integration/**/*.test.js'], // Integration tests in tests/integration
     setupFiles: ['<rootDir>/tests/integrationSetup.js'], // Changed to use our new setup file
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
-    collectCoverage: false, // Disable coverage collection for integration tests
+    collectCoverage: true,
     coverageDirectory: 'coverage/integration',
     coverageThreshold: {
         global: {

@@ -7,9 +7,9 @@ dotenv.config();
 // Set default NODE_ENV if not defined
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'development';
-    console.log('[config] NODE_ENV is set to default: `development`');
+    // console.log('[config] NODE_ENV is set to default: `development`');
 }
-console.log(`[config] Current environment: \`${process.env.NODE_ENV}\``);
+logger.info(`[config] Current environment: \`${process.env.NODE_ENV}\``);
 
 const getMongoDbUri = () => {
     const nodeEnv = process.env.NODE_ENV || 'development';
@@ -66,7 +66,7 @@ const config = {
     mongodbUri: getMongoDbUri(),
     jwtSecret: getJwtSecret(),
     nodeEnv: process.env.NODE_ENV || 'development',
-    rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || (15 * 60 * 1000), // 15 minutes
+    rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 minutes
     rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100,
     apiBasePath: process.env.API_BASE_PATH || 'api',
     apiVersion: process.env.API_VERSION || 'v1',

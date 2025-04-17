@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Cross-platform friendly hook for both Linux and Windows
+echo "🧪 Running all tests before push..."
+npx cross-env npm test

@@ -1,10 +1,28 @@
-module.exports = {
+/** @type {import('jest').Config} */
+const config = {
     testEnvironment: 'node',
-    // Removed testMatch to delegate to specific Jest configurations
-    setupFiles: ['<rootDir>/tests/setupTests.js'],
+    projects: [
+        {
+            displayName: 'unit',
+            testMatch: ['**/src/**/__tests__/**/*.test.js'],
+            setupFiles: ['<rootDir>/tests/setupTests.js'],
+            coverageDirectory: '<rootDir>/coverage/unit',
+            restoreMocks: true, // Add this to restore mocks automatically after each test
+            resetMocks: false, // Don't reset mocks between tests, but restore their implementation
+        },
+        {
+            displayName: 'integration',
+            testMatch: ['**/tests/integration/**/*.test.js'],
+            setupFiles: ['<rootDir>/tests/integrationSetup.js'],
+            coverageDirectory: '<rootDir>/coverage/integration',
+            restoreMocks: true, // Add this to restore mocks automatically after each test
+            resetMocks: false, // Don't reset mocks between tests, but restore their implementation
+        },
+    ],
+    // Common configuration for all test types
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
     collectCoverage: true,
-    coverageDirectory: 'coverage',
+    coverageDirectory: '<rootDir>/coverage',
     coverageThreshold: {
         global: {
             branches: 75,
@@ -14,12 +32,12 @@ module.exports = {
         },
     },
     clearMocks: true,
-    restoreMocks: true,
-    testTimeout: 10000,
-    detectOpenHandles: true,  // Enable to detect resources that weren't properly closed
-    forceExit: true,          // Force Jest to exit after tests complete (temporary solution)
-    verbose: true,            // Enable more detailed output for debugging
-    injectGlobals: true,      // Disable globals that might cause side effects
-    // maxConcurrency: 1,     // Run tests sequentially to avoid resource conflicts
-    // maxWorkers: 1,         // Use a single worker for better stability
+    restoreMocks: true, // Global setting as a fallback
+    detectOpenHandles: true,
+    forceExit: true,
+    verbose: true,
+    injectGlobals: true,
+    testTimeout: 30000, // Global timeout setting
 };
+
+module.exports = config;

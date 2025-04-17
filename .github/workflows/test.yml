@@ -1,66 +1,71 @@
 name: Test with jest
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  release:
-    types: [ created ]
-  workflow_dispatch:
-  # schedule:
-  #   - cron: '0 0 * * *'  # Runs every day at midnight
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+    release:
+        types: [created]
+    workflow_dispatch:
+    # schedule:
+    #   - cron: '0 0 * * *'  # Runs every day at midnight
 
 jobs:
-  test:
-    name: Test on node ${{ matrix.node }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest] #[ubuntu-latest, windows-latest, macOS-latest]
-        node: ['18.x', '20.x', 'latest']
+    test:
+        name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os:
+                    - ubuntu-latest
+                    # - windows-latest
+                    # - macOS-latest
+                architecture:
+                    - x64
+                node_version:
+                    - 14
+                    - 16
+                    - 18
+                    - 20
+                    - latest
 
-    steps:
-    - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-    - name: Cache Node.js modules
-      id: cache-npm
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+            - name: Cache Node.js modules
+              id: cache-npm
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
 
-    - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-      name: List the state of node modules
-      continue-on-error: true
-      run: npm list
+            - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+              name: List the state of node modules
+              continue-on-error: true
+              run: npm list
 
-    - name: Use Node.js ${{ matrix.node }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node }}
+            - name: Use Node.js ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node_version }}
+                  architecture: ${{ matrix.architecture }}
 
-    - name: Install dependencies
-      run: npm ci
-      env:
-        NODE_ENV: development
-    - name: Run unit tests
-      run: npm run test:unit
-    - name: Run integration tests
-      run: npm run test:integration
+            - name: Install dependencies
+              run: npm ci
+              env:
+                  NODE_ENV: development
 
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      if: success()
-      # && github.event_name == 'release'
-      with:
-        name: codecov-umbrella
-        fail_ci_if_error: true
-        directory: ./coverage
-        files: ./unit/clover.xml,./integration/clover.xml
-        flags: unittests
-        verbose: true
-        token: ${{ secrets.CODECOV_TOKEN }}
+            - name: Run tests
+              run: npm test
 
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v5
+              if: success()
+              with:
+                  name: codecov-umbrella
+                  fail_ci_if_error: true
+                  verbose: true
+                  token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,7 +1,7 @@
 {
     "name": "@kjanat/chatlogger",
     "description": "API for storing and retrieving chat interactions",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "author": "Kaj Kowalski <dev@kajkowalski.nl> (https://github.com/kjanat)",
     "license": "MIT",
     "main": "src/server.js",
@@ -15,11 +15,12 @@
         "email": "dev+issues-chatlogger@kjanat.com"
     },
     "scripts": {
+        "prepare": "husky",
         "start": "node src/server.js",
         "dev": "nodemon src/server.js",
+        "test": "jest",
         "test:unit": "jest --config jest.unit.config.js",
         "test:integration": "jest --config jest.integration.config.js",
-        "test": "npm run test:unit && npm run test:integration",
         "test:coverage": "jest --coverage",
         "version:patch": "node .scripts/version-bump.js patch",
         "version:minor": "node .scripts/version-bump.js minor",
@@ -34,6 +35,8 @@
         "docker:build": "node .scripts/docker-build.js",
         "docker:compose": "VERSION=$(node -p \"require('./src/config/version.js').version\") docker-compose up -d",
         "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "format": "prettier --write \"**/*.{js,json,md,yml,yaml}\"",
         "serve": "serve -s build",
         "build": "webpack --mode production",
         "generate:secret": "node src/utils/generate-secret.js"
@@ -74,9 +77,15 @@
     },
     "devDependencies": {
         "@babel/preset-env": "^7.26.9",
+        "cross-env": "^7.0.3",
+        "eslint-config-prettier": "^10.1.2",
+        "husky": "^9.1.7",
         "jest": "^29.7.0",
+        "lint": "^0.8.19",
+        "lint-staged": "^15.5.1",
         "mongodb-memory-server": "^10.1.4",
         "nodemon": "^3.1.9",
+        "prettier": "^3.5.3",
         "semver": "^7.7.1",
         "supertest": "^7.1.0"
     }

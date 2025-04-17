@@ -1,5 +1,7 @@
 # ChatLogger: Chatbot User Interaction Storage API
 
+[![GitHub Tag](https://img.shields.io/github/v/tag/kjanat/ChatLogger?sort=semver&style=for-the-badge)](https://github.com/kjanat/ChatLogger/tags) <!-- [![Node Current](https://img.shields.io/node/v/%40kjanat%2Fchatlogger?registry_uri=https%3A%2F%2Fnpm.pkg.github.com&style=for-the-badge)](https://www.npmjs.com/package/@kjanat/chatlogger) --> [![GitHub License](https://img.shields.io/github/license/kjanat/ChatLogger?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Codecov](https://img.shields.io/codecov/c/github/kjanat/ChatLogger?style=for-the-badge)](https://codecov.io/gh/kjanat/ChatLogger) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kjanat/ChatLogger/test.yml?style=for-the-badge&label=tests)](https://github.com/kjanat/ChatLogger/actions/workflows/test.yml) [![Last Commit](https://img.shields.io/github/last-commit/kjanat/ChatLogger?style=for-the-badge)](https://github.com/kjanat/ChatLogger/commits) [![Issues](https://img.shields.io/github/issues/kjanat/ChatLogger?style=for-the-badge)](https://github.com/kjanat/ChatLogger/issues)
+
 A MongoDB and Express-based API for storing, retrieving, and analyzing chat interactions between users and AI assistants.
 
 ## Features
@@ -9,12 +11,13 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 - Message storage with role-based categorization (user, assistant, system, etc.)
 - Support for function calls and tool calls tracking
 - Performance metrics collection (tokens, latency)
-- API rate limiting
+- API rate limiting and security features
 - Comprehensive request logging
-- Swagger API documentation
+- Interactive Swagger API documentation
 - Docker support for easy deployment
 - Analytics and reporting for chat activity
 - Data export in JSON and CSV formats
+- Organization-level access control
 
 ## Getting Started
 
@@ -22,7 +25,7 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 
 - Node.js (v14 or higher)
 - MongoDB (local instance or Atlas)
-- Docker and Docker Compose (optional)
+- Docker and Docker Compose (optional, for containerized deployment)
 
 ### Installation
 
@@ -56,13 +59,13 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 
 #### Local Development
 
-For development (with auto-restart):
+For development with auto-restart using nodemon:
 
 ```bash
 npm run dev
 ```
 
-For production:
+For production environment:
 
 ```bash
 npm start
@@ -95,9 +98,29 @@ docker-compose build app
 docker-compose up -d
 ```
 
+### Testing
+
+Run unit tests:
+
+```bash
+npm run test:unit
+```
+
+Run integration tests:
+
+```bash
+npm run test:integration
+```
+
+Run all tests with coverage report:
+
+```bash
+npm test
+```
+
 ## API Documentation
 
-When the server is running, you can access the Swagger documentation at:
+When the server is running, you can access the interactive Swagger documentation at:
 
 ```plaintext
 http://localhost:3000/api/v1/docs
@@ -156,22 +179,22 @@ The API supports storing various message types with the following structure:
 
 ```json
 {
-  "role": "user|assistant|system|function|tool",
-  "content": "The message content",
-  "name": "optional_name",
-  "functionCall": {
-    // Function call details
-  },
-  "toolCalls": [
-    // Tool call details
-  ],
-  "metadata": {
-    // Any additional metadata
-  },
-  "tokens": 100,
-  "promptTokens": 50,
-  "completionTokens": 50,
-  "latency": 1200
+    "role": "user|assistant|system|function|tool",
+    "content": "The message content",
+    "name": "optional_name",
+    "functionCall": {
+        // Function call details
+    },
+    "toolCalls": [
+        // Tool call details
+    ],
+    "metadata": {
+        // Any additional metadata
+    },
+    "tokens": 100,
+    "promptTokens": 50,
+    "completionTokens": 50,
+    "latency": 1200
 }
 ```
 
@@ -234,7 +257,14 @@ npm run docker:compose
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
 ## License
+
 ChatLogger is licensed under the MIT License. This means you are free to use, modify, and distribute the software, provided that the original copyright notice and permission notice are included in all copies or substantial portions of the software.
 
 For more details, see the [LICENSE](LICENSE) file included in this repository.

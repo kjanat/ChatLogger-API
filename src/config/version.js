@@ -5,7 +5,7 @@
 const semver = require('semver');
 
 // Current version information
-const currentVersion = '0.2.1';
+const currentVersion = '0.2.2';
 
 module.exports = {
     // Current version without v prefix
@@ -16,8 +16,14 @@ module.exports = {
 
     // Helper function to bump version using semver
     bump: function (type = 'patch') {
-        if (!['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease'].includes(type.toLowerCase())) {
-            throw new Error('Invalid version bump type. Must be one of: patch, minor, major, prepatch, preminor, premajor, prerelease');
+        if (
+            !['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease'].includes(
+                type.toLowerCase(),
+            )
+        ) {
+            throw new Error(
+                'Invalid version bump type. Must be one of: patch, minor, major, prepatch, preminor, premajor, prerelease',
+            );
         }
 
         return semver.inc(this.version, type.toLowerCase());
@@ -36,5 +42,5 @@ module.exports = {
     // Validate if string is valid semver
     isValid: function (versionStr) {
         return semver.valid(versionStr) !== null;
-    }
+    },
 };
