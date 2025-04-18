@@ -15,7 +15,7 @@ node -e "
     if (files.length > 0) {
       // Run tests only if there are JS files changed
       console.log('Running tests for changed files:', files.join(', '));
-      execSync('npm run test:unit -- --findRelatedTests ' + files.join(' '), { stdio: 'inherit' });
+      execSync('npm run test:unit -- --findRelatedTests  --passWithNoTests ' + files.join(' '), { stdio: 'inherit' });
     } else {
       console.log('No JS files changed, skipping tests');
     }
