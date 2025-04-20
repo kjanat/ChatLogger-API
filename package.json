@@ -1,18 +1,19 @@
 {
-    "name": "@kjanat/chatlogger",
+    "name": "@kjanat/chatlogger-api",
+    "private": true,
     "description": "API for storing and retrieving chat interactions",
     "version": "0.2.3",
     "author": "Kaj Kowalski <dev@kajkowalski.nl> (https://github.com/kjanat)",
     "license": "MIT",
     "main": "src/server.js",
-    "homepage": "https://github.com/kjanat/chatlogger#readme",
+    "homepage": "https://github.com/kjanat/ChatLogger-API#readme",
     "repository": {
         "type": "git",
-        "url": "https://github.com/kjanat/chatlogger.git"
+        "url": "https://github.com/kjanat/ChatLogger-API.git"
     },
     "bugs": {
-        "url": "https://github.com/kjanat/chatlogger/issues",
-        "email": "dev+issues-chatlogger@kjanat.com"
+        "url": "https://github.com/kjanat/ChatLogger-API/issues",
+        "email": "dev+issues-chatlogger-api@kjanat.com"
     },
     "lint-staged": {
         "*.js": [
@@ -55,7 +56,8 @@
         "ext": "js,mjs,cjs,json,yaml,yml,ts",
         "ignore": [
             ".git",
-            "node_modules"
+            "node_modules",
+            "frontend"
         ]
     },
     "keywords": [
