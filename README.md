@@ -46,7 +46,7 @@ A MongoDB and Express-based API for storing, retrieving, and analyzing chat inte
 
 3. Create or copy the [.env.example](.env.example) to a `.env` file in the root directory with the following variables:
 
-    ```sh
+    ```env
     PORT=3000
     MONGODB_URI=mongodb://localhost:27017/chatlogger
     JWT_SECRET=your_jwt_secret_key_change_in_production

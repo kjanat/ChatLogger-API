@@ -5,76 +5,86 @@
 
 version: 2
 updates:
-    - package-ecosystem: 'npm'
-      directory: '/'
-      schedule:
-          interval: weekly
-      open-pull-requests-limit: 10
-      labels:
-          - 'dependencies'
-          - 'npm'
-      commit-message:
-          prefix: 'npm'
-          include: 'scope'
-      reviewers:
-          - 'kjanat'
-      allow:
-          - dependency-type: 'direct'
-    - package-ecosystem: 'docker'
-      directory: '/'
-      schedule:
-          interval: weekly
-      open-pull-requests-limit: 10
-      labels:
-          - 'dependencies'
-          - 'docker'
-      commit-message:
-          prefix: 'docker'
-          include: 'scope'
-      reviewers:
-          - 'kjanat'
-      allow:
-          - dependency-type: 'direct'
-    - package-ecosystem: 'docker-compose'
-      directory: '/'
-      schedule:
-          interval: weekly
-      open-pull-requests-limit: 10
-      labels:
-          - 'dependencies'
-          - 'docker'
-      commit-message:
-          prefix: 'docker-compose'
-          include: 'scope'
-      reviewers:
-          - 'kjanat'
-      allow:
-          - dependency-type: 'direct'
-    - package-ecosystem: 'github-actions'
-      directory: '/.github/workflows/'
-      schedule:
-          interval: weekly
-      open-pull-requests-limit: 10
-      labels:
-          - 'dependencies'
-      commit-message:
-          prefix: 'github-actions'
-          include: 'scope'
-      reviewers:
-          - 'kjanat'
-      allow:
-          - dependency-type: 'direct'
-    - package-ecosystem: 'devcontainers'
-      directory: '/'
-      schedule:
-          interval: weekly
-      open-pull-requests-limit: 10
-      labels:
-          - 'dependencies'
-      commit-message:
-          prefix: 'devcontainers'
-          include: 'scope'
-      reviewers:
-          - 'kjanat'
-      allow:
-          - dependency-type: 'direct'
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'npm'
+    commit-message:
+      prefix: 'npm'
+      include: 'scope'
+    reviewers:
+      - 'kjanat'
+    groups:
+      npm-dependencies:
+        patterns:
+          - '*'
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'docker'
+    commit-message:
+      prefix: 'docker'
+      include: 'scope'
+    reviewers:
+      - 'kjanat'
+    groups:
+      docker-dependencies:
+        patterns:
+          - '*'
+  - package-ecosystem: 'docker-compose'
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'docker'
+    commit-message:
+      prefix: 'docker-compose'
+      include: 'scope'
+    reviewers:
+      - 'kjanat'
+    groups:
+      docker-dependencies:
+        patterns:
+          - '*'
+  - package-ecosystem: 'github-actions'
+    directory: '/.github/workflows/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'github-actions'
+      include: 'scope'
+    reviewers:
+      - 'kjanat'
+    groups:
+      github-dependencies:
+        patterns:
+          - '*'
+  - package-ecosystem: 'devcontainers'
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+    commit-message:
+      prefix: 'devcontainers'
+      include: 'scope'
+    reviewers:
+      - 'kjanat'
+    groups:
+      github-dependencies:
+        patterns:
+          - '*'

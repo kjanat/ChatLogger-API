@@ -1,0 +1,48 @@
+name: Tag Versioning
+
+on:
+    push:
+        branches:
+            - main
+            - master
+
+jobs:
+    tag-version:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            # Checkout the repository
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            # Install dependencies (if package.json has dependencies like `semver`)
+            - name: Install Dependencies
+              run: sudo apt install jq -y
+
+            # Extract version from package.json
+            - name: Read Version from package.json
+              id: get_version
+              run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
+            # Fetch existing tags
+            - name: Fetch All Tags
+              run: git fetch --tags
+
+            # Delete and recreate the tag if it exists; otherwise, create a new tag
+            - name: Create or Update Tag
+              env:
+                  VERSION: ${{ env.VERSION }}
+              run: |
+                  # Check if the tag exists
+                  if git tag | grep -q "^v$VERSION$"; then
+                    echo "Tag v$VERSION already exists. Deleting and recreating it..."
+                    git tag -d "v$VERSION"
+                    git push origin :refs/tags/v$VERSION
+                  else
+                    echo "Tag v$VERSION does not exist. Creating it..."
+                  fi
+
+                  # Create and push the tag
+                  git tag "v$VERSION"
+                  git push origin "v$VERSION"
