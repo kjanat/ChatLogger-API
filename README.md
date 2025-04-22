@@ -1,6 +1,11 @@
-# ChatLogger: Chatbot User Interaction Storage API
+# ChatLogger API
 
-[![GitHub Tag](https://img.shields.io/github/v/tag/kjanat/ChatLogger?sort=semver&style=for-the-badge)](https://github.com/kjanat/ChatLogger/tags) <!-- [![Node Current](https://img.shields.io/node/v/%40kjanat%2Fchatlogger?registry_uri=https%3A%2F%2Fnpm.pkg.github.com&style=for-the-badge)](https://www.npmjs.com/package/@kjanat/chatlogger) --> [![GitHub License](https://img.shields.io/github/license/kjanat/ChatLogger?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Codecov](https://img.shields.io/codecov/c/github/kjanat/ChatLogger?style=for-the-badge)](https://codecov.io/gh/kjanat/ChatLogger) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kjanat/ChatLogger/test.yml?style=for-the-badge&label=tests)](https://github.com/kjanat/ChatLogger/actions/workflows/test.yml) [![Last Commit](https://img.shields.io/github/last-commit/kjanat/ChatLogger?style=for-the-badge)](https://github.com/kjanat/ChatLogger/commits) [![Issues](https://img.shields.io/github/issues/kjanat/ChatLogger?style=for-the-badge)](https://github.com/kjanat/ChatLogger/issues)
+[![Tag](https://img.shields.io/github/v/tag/kjanat/ChatLogger-API?sort=semver&style=for-the-badge)][Tags] <!-- [![Node Current](https://img.shields.io/node/v/%40kjanat%2Fchatlogger-api?registry_uri=https%3A%2F%2Fnpm.pkg.github.com&style=for-the-badge)](https://www.npmjs.com/package/@kjanat/chatlogger-api) -->
+[![License](https://img.shields.io/github/license/kjanat/ChatLogger-API?style=for-the-badge)](LICENSE)
+[![Codecov](https://img.shields.io/codecov/c/github/kjanat/ChatLogger-API?style=for-the-badge)][Coverage Report]
+[![Test Workflow Status](https://img.shields.io/github/actions/workflow/status/kjanat/ChatLogger-API/test.yml?style=for-the-badge&label=tests)][Workflow Test]
+[![Last Commit](https://img.shields.io/github/last-commit/kjanat/ChatLogger-API?style=for-the-badge)][Commits]
+[![Issues](https://img.shields.io/github/issues/kjanat/ChatLogger-API?style=for-the-badge)][Issues]
 
 A MongoDB and Express-based API for storing, retrieving, and analyzing chat interactions between users and AI assistants.
 
@@ -268,3 +273,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ChatLogger is licensed under the MIT License. This means you are free to use, modify, and distribute the software, provided that the original copyright notice and permission notice are included in all copies or substantial portions of the software.
 
 For more details, see the [LICENSE](LICENSE) file included in this repository.
+
+[Tags]: https://github.com/kjanat/ChatLogger/tags
+[Coverage Report]: https://app.codecov.io/gh/kjanat/ChatLogger-API
+[Workflow Test]: https://github.com/kjanat/ChatLogger/actions/workflows/test.yml
+[Commits]: https://github.com/kjanat/ChatLogger/commits
+[Issues]: https://github.com/kjanat/ChatLogger/issues
