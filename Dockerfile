@@ -1,70 +1,59 @@
-# Use Node.js 23 Alpine as the base image (upgraded from Node.js 20)
-FROM node:23-alpine AS build
+# Use Node.js LTS version as base image
+FROM node:18-alpine AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY . .
+
+# Build TypeScript application
+RUN npm install -g typescript
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Define build argument for version
-ARG VERSION=0.1.1
-ARG BUILD_DATE=unknown
-ARG VCS_REF=unknown
+# Set environment to production
+ENV NODE_ENV production
 
-# Add container metadata using labels
-LABEL org.opencontainers.image.source="https://github.com/kjanat/ChatLogger"
-LABEL org.opencontainers.image.description="API for storing and retrieving chat interactions"
-LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="${VERSION}"
-LABEL org.opencontainers.image.created="${BUILD_DATE}"
-LABEL org.opencontainers.image.revision="${VCS_REF}"
-LABEL org.opencontainers.image.authors="Kaj Kowalski <dev@kajkowalski.nl>"
-LABEL org.opencontainers.image.url="https://github.com/kjanat/ChatLogger"
-LABEL org.opencontainers.image.documentation="https://github.com/kjanat/ChatLogger#readme"
-
-# Copy package files for dependency installation
+# Copy package files
 COPY package*.json ./
 
 # Install production dependencies only
 RUN npm ci --only=production
 
-# Create a non-root user
+# Copy built files from build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/.env.example ./.env.example
+
+# Create a non-root user to run the application
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001 -G nodejs
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
 
-# Switch to production image for smaller footprint
-FROM node:23-alpine AS production
+# Switch to non-root user
+USER nodejs
 
-# Set working directory
-WORKDIR /app
-
-# Copy built node modules and package files from build stage
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package*.json ./
-
-# Copy application source code selectively (exclude sensitive files)
-COPY .dockerignore ./
-COPY src ./src
-COPY LICENSE README.md ./
-
-# Create and set proper permissions on logs directory
+# Create and set permissions for logs directory
 RUN mkdir -p /app/logs && \
-    chown -R 1001:1001 /app
+    chown -R nodejs:nodejs /app/logs
 
-# Set environment variables
-ENV NODE_ENV=production \
-    PORT=3000
-
-# Expose the port the app runs on
+# Expose port
 EXPOSE 3000
 
-# Install curl for healthcheck
-RUN apk --no-cache add curl
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e "fetch('http://localhost:3000/healthz').then(r => r.json()).then(j => process.exit(j.status === 'ok' ? 0 : 1))" || exit 1
 
-# Switch to non-root user for security
-USER 1001
-
-# Define health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/healthz || exit 1
-
-# Command to run the application
-CMD ["node", "src/server.js"]
+# Run the application
+CMD ["node", "dist/server.js"]

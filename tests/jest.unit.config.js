@@ -1,7 +1,7 @@
 module.exports = {
     testEnvironment: 'node',
     testMatch: ['<rootDir>/src/**/__tests__/*.test.js'],
-    setupFiles: ['<rootDir>/tests/setupTests.js'],
+    setupFiles: ['<rootDir>/tests/setup-tests.js'],
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
     collectCoverage: false, // Disable coverage for unit tests
     coverageDirectory: '<rootDir>/coverage/unit',

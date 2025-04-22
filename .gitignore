@@ -87,3 +87,6 @@ pids/
 docker-compose.yml
 Dockerfile
 .dockerignore
+
+# TypeScript
+*.tsbuildinfo

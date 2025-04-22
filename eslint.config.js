@@ -1,9 +1,12 @@
 const prettier = require('eslint-config-prettier');
+const tsParser = require('@typescript-eslint/parser');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
 
 module.exports = [
+    // JavaScript files config
     {
         files: ['**/*.js'],
-        ignores: ['coverage/*', 'logs/*', 'node_modules/*', 'dist/*', '.scripts/*'],
+        ignores: ['coverage/**', 'logs/**', 'node_modules/**', 'dist/**', '.scripts/**'],
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -12,6 +15,7 @@ module.exports = [
                 console: 'readonly',
                 module: 'readonly',
                 require: 'readonly',
+                exports: 'readonly',
                 __dirname: 'readonly',
                 __filename: 'readonly',
                 // Jest globals
@@ -94,6 +98,144 @@ module.exports = [
             'require-yield': 'error',
             'use-isnan': 'error',
             'valid-typeof': 'error',
+        },
+    },
+    // TypeScript files config
+    {
+        files: ['**/*.ts', '**/*.tsx'],
+        ignores: ['coverage/**', 'logs/**', 'node_modules/**', 'dist/**', '.scripts/**'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                ecmaVersion: 'latest',
+                sourceType: 'module',
+            },
+            globals: {
+                process: 'readonly',
+                console: 'readonly',
+                module: 'readonly',
+                require: 'readonly',
+                exports: 'readonly',
+                __dirname: 'readonly',
+                __filename: 'readonly',
+                // Jest globals
+                describe: 'readonly',
+                expect: 'readonly',
+                it: 'readonly',
+                test: 'readonly',
+                jest: 'readonly',
+                beforeAll: 'readonly',
+                afterAll: 'readonly',
+                beforeEach: 'readonly',
+                afterEach: 'readonly',
+            },
+        },
+        linterOptions: {
+            reportUnusedDisableDirectives: true,
+        },
+        plugins: {
+            '@typescript-eslint': tsPlugin,
+        },
+        rules: {
+            // TypeScript specific rules
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
+            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            // Disable JS rule in favor of TS rule
+            'no-unused-vars': 'off',
+            
+            // The rest of the same rules as for JS
+            'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+            'no-duplicate-imports': 'error',
+            'no-var': 'error',
+            'prefer-const': 'error',
+            
+            // Built-in ESLint rules - similar to eslint:recommended
+            'constructor-super': 'error',
+            'for-direction': 'error',
+            'getter-return': 'error',
+            'no-async-promise-executor': 'error',
+            'no-case-declarations': 'error',
+            'no-class-assign': 'error',
+            'no-compare-neg-zero': 'error',
+            'no-cond-assign': 'error',
+            'no-const-assign': 'error',
+            'no-constant-condition': 'error',
+            'no-control-regex': 'error',
+            'no-debugger': 'error',
+            'no-delete-var': 'error',
+            'no-dupe-args': 'error',
+            'no-dupe-class-members': 'error',
+            'no-dupe-else-if': 'error',
+            'no-dupe-keys': 'error',
+            'no-duplicate-case': 'error',
+            'no-empty': 'error',
+            'no-empty-character-class': 'error',
+            'no-empty-pattern': 'error',
+            'no-ex-assign': 'error',
+            'no-extra-boolean-cast': 'error',
+            'no-fallthrough': 'error',
+            'no-func-assign': 'error',
+            'no-global-assign': 'error',
+            'no-import-assign': 'error',
+            'no-inner-declarations': 'error',
+            'no-invalid-regexp': 'error',
+            'no-irregular-whitespace': 'error',
+            'no-loss-of-precision': 'error',
+            'no-misleading-character-class': 'error',
+            'no-mixed-spaces-and-tabs': 'error',
+            'no-new-symbol': 'error',
+            'no-nonoctal-decimal-escape': 'error',
+            'no-obj-calls': 'error',
+            'no-octal': 'error',
+            'no-prototype-builtins': 'error',
+            'no-self-assign': 'error',
+            'no-setter-return': 'error',
+            'no-shadow-restricted-names': 'error',
+            'no-sparse-arrays': 'error',
+            'no-this-before-super': 'error',
+            'no-undef': 'error',
+            'no-unexpected-multiline': 'error',
+            'no-unreachable': 'error',
+            'no-unsafe-finally': 'error',
+            'no-unsafe-negation': 'error',
+            'no-unsafe-optional-chaining': 'error',
+            'no-unused-labels': 'error',
+            'no-useless-backreference': 'error',
+            'no-useless-catch': 'error',
+            'no-useless-escape': 'error',
+            'no-with': 'error',
+            'require-yield': 'error',
+            'use-isnan': 'error',
+            'valid-typeof': 'error',
+        },
+    },
+    // Test files - more lenient rules for test files
+    {
+        files: ['**/__tests__/**/*.ts', '**/*.test.ts'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                ecmaVersion: 'latest',
+                sourceType: 'module',
+            },
+        },
+        plugins: {
+            '@typescript-eslint': tsPlugin,
+        },
+        rules: {
+            // Disable TypeScript strict rules for test files
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/no-var-requires': 'off',
+            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
+            '@typescript-eslint/ban-ts-comment': 'off',
+            '@typescript-eslint/ban-types': 'off',
+            '@typescript-eslint/no-empty-function': 'off',
+            'no-redeclare': 'off',
+            'no-undef': 'off',
         },
     },
     prettier,

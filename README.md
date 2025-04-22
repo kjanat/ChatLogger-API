@@ -253,6 +253,21 @@ You can also start the entire application stack using Docker Compose with the cu
 npm run docker:compose
 ```
 
+## TypeScript Support
+
+This project has been refactored to use TypeScript, providing better type safety and developer experience.
+
+### TypeScript-specific Scripts
+
+- `npm run build` - Compiles TypeScript source to JavaScript
+- `npm run dev` - Runs the project in development mode with TypeScript support
+
+### Development Workflow
+
+1. Make changes to TypeScript files in the `src` directory
+2. Run `npm run build` to compile to JavaScript
+3. Run `npm start` to start the compiled application, or `npm run dev` for development mode
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

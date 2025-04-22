@@ -129,15 +129,17 @@ additionalFiles.forEach(file => {
 
 // Git operations - commit changes and create tag
 try {
-    console.log('\nCommitting changes to git...');
-    execSync('git add .', { stdio: 'inherit' });
-    execSync(`git commit -m "Bump version to ${newVersion}"`, { stdio: 'inherit' });
-    execSync(`git tag ${newVersionWithV} -m "Version ${newVersion}"`, { stdio: 'inherit' });
+    console.log('Git operations are disabled for now.');
+    console.log(`New version: ${newVersionWithV}`);
+    // console.log('\nCommitting changes to git...');
+    // execSync('git add .', { stdio: 'inherit' });
+    // execSync(`git commit -m "Bump version to ${newVersion}"`, { stdio: 'inherit' });
+    // execSync(`git tag ${newVersionWithV} -m "Version ${newVersion}"`, { stdio: 'inherit' });
 
-    console.log('\n✓ Changes committed and tagged successfully!');
-    console.log(`\nTo push changes and tag to remote repository:`);
-    console.log(`  git push origin master`);
-    console.log(`  git push origin ${newVersionWithV}`);
+    // console.log('\n✓ Changes committed and tagged successfully!');
+    // console.log(`\nTo push changes and tag to remote repository:`);
+    // console.log(`  git push origin master`);
+    // console.log(`  git push origin ${newVersionWithV}`);
 
     console.log('\nTo build Docker image with new version:');
     console.log(`  docker build --build-arg VERSION=${newVersion} -t chatlogger:${newVersion} .`);

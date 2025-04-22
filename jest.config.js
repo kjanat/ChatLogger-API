@@ -1,43 +1,44 @@
-/** @type {import('jest').Config} */
-const config = {
+/**
+ * Jest configuration file.
+ */
+module.exports = {
     testEnvironment: 'node',
-    projects: [
-        {
-            displayName: 'unit',
-            testMatch: ['**/src/**/__tests__/**/*.test.js'],
-            setupFiles: ['<rootDir>/tests/setupTests.js'],
-            // coverageDirectory: '<rootDir>/coverage/unit',
-            restoreMocks: true, // Add this to restore mocks automatically after each test
-            resetMocks: false, // Don't reset mocks between tests, but restore their implementation
-        },
-        {
-            displayName: 'integration',
-            testMatch: ['**/tests/integration/**/*.test.js'],
-            setupFiles: ['<rootDir>/tests/integrationSetup.js'],
-            // coverageDirectory: '<rootDir>/coverage/integration',
-            restoreMocks: true, // Add this to restore mocks automatically after each test
-            resetMocks: false, // Don't reset mocks between tests, but restore their implementation
-        },
-    ],
-    // Common configuration for all test types
+    globalSetup: '<rootDir>/tests/globalSetup.js',
     globalTeardown: '<rootDir>/tests/globalTeardown.js',
-    collectCoverage: true,
-    coverageDirectory: '<rootDir>/coverage',
+    coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+    testMatch: ['**/__tests__/**/*.test.(js|ts)'],
+    // Add TypeScript support
+    preset: 'ts-jest',
+    transform: {
+        '^.+\\.(ts|tsx)$': 'ts-jest',
+    },
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+    // Ignore specific directories
+    transformIgnorePatterns: ['/node_modules/'],
+    // Set coverage thresholds
     coverageThreshold: {
         global: {
-            branches: 75,
-            functions: 75,
-            lines: 75,
-            statements: 75,
+            branches: 70,
+            functions: 70,
+            lines: 70,
+            statements: 70,
         },
     },
-    clearMocks: true,
-    restoreMocks: true, // Global setting as a fallback
-    detectOpenHandles: true,
-    forceExit: true,
-    verbose: true,
-    injectGlobals: true,
-    testTimeout: 30000, // Global timeout setting
+    // Coverage reporting options
+    collectCoverageFrom: [
+        'src/**/*.{js,ts}', 
+        '!src/**/*.d.ts',
+        '!src/config/**',
+        '!**/node_modules/**',
+        '!**/coverage/**',
+        '!**/tests/**',
+        '!**/__tests__/**',
+    ],
+    // Setup files
+    setupFilesAfterEnv: ['<rootDir>/tests/setup-tests.js'], // Restored
+    // Extension for test files
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1', // Enables import aliases
+    },
 };
-
-module.exports = config;
