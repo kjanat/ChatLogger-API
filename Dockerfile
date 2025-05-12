@@ -1,5 +1,5 @@
 # Use Node.js 23 Alpine as the base image (upgraded from Node.js 20)
-FROM node:23-alpine AS build
+FROM node:24-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -31,7 +31,7 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001 -G nodejs
 
 # Switch to production image for smaller footprint
-FROM node:23-alpine AS production
+FROM node:24-alpine AS production
 
 # Set working directory
 WORKDIR /app
