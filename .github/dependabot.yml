@@ -16,8 +16,6 @@ updates:
     commit-message:
       prefix: 'npm'
       include: 'scope'
-    reviewers:
-      - 'kjanat'
     groups:
       npm-dependencies:
         patterns:
@@ -33,8 +31,6 @@ updates:
     commit-message:
       prefix: 'docker'
       include: 'scope'
-    reviewers:
-      - 'kjanat'
     groups:
       docker-dependencies:
         patterns:
@@ -50,8 +46,6 @@ updates:
     commit-message:
       prefix: 'docker-compose'
       include: 'scope'
-    reviewers:
-      - 'kjanat'
     groups:
       docker-dependencies:
         patterns:
@@ -66,8 +60,6 @@ updates:
     commit-message:
       prefix: 'github-actions'
       include: 'scope'
-    reviewers:
-      - 'kjanat'
     groups:
       github-dependencies:
         patterns:
@@ -82,8 +74,6 @@ updates:
     commit-message:
       prefix: 'devcontainers'
       include: 'scope'
-    reviewers:
-      - 'kjanat'
     groups:
       github-dependencies:
         patterns:
