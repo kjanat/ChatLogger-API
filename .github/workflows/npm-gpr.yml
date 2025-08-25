@@ -21,7 +21,7 @@ jobs:
         node: ['18.x', '20.x', 'latest']
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Cache node modules
       id: cache-npm
@@ -70,7 +70,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
